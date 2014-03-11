@@ -19,17 +19,19 @@
 <!-- Nav and Banner -->
 <header>
     <div class="fade"></div>
-    <div class="row">
-        <div class="large-3 columns">
-            <!-- Main Banner Image - place in a paragraph to enforce the modular scale spacing -->
-            <p style="text-align: center"><img src="{% static 'img/logo.png' %}" width="100"/><br><span class="name">SportsTab</span>
-            </p>
-
-
-        </div>
-        <div class="large-6 columns">
-            <a href="#" style="margin-top: 60px" class="radius right button">Get it now on the <strong>APP
-                STORE</strong></a>
+    <div style="background: #212121">
+        <div class="row">
+            <div class="large-2 small-12 columns">
+                <p style="text-align: center; margin-top: 20px"><img src="{% static 'img/logo.png' %}" width="100"/>
+                </p>
+            </div>
+            <div class="large-3 small-12 columns">
+                <p class="name" style="margin-top: 45px; margin-left: -30px">SportsTab</p>
+            </div>
+            <div class="large-6 small-12 columns">
+                <a href="#" style="margin-top: 45px" class="radius right button">Get it now on the <strong>PLAY
+                    STORE</strong></a>
+            </div>
         </div>
     </div>
 
@@ -38,7 +40,7 @@
 
     <!-- Main Content Section -->
 
-    <div class="row">
+    <div class="row" style="padding-bottom: 40px">
         <div class="large-12 columns">
             <div class="fluid-width-video-wrapper" style="height: 545px">
                 <iframe src="//player.vimeo.com/video/88318922?title=0&amp;byline=0&amp;portrait=0&amp;badge=0"
@@ -47,40 +49,36 @@
             </div>
         </div>
     </div>
-</header>
+    <!-- Call to Action Panel -->
+    <div class="middle-row">
+        <div class="row">
+            <div class="large-12 columns">
 
+                <div class="panel">
+                    <div class="row">
+                        <div class="large-6 columns">
+                            <div class="thinglist-iphone animated bounceInLeft">
+                                <p><img src="{% static 'img/device-2014-03-11-174124_framed.png' %}"></p>
+                            </div>
+                        </div>
+                        <div class="large-6 columns" style="text-align: center">
+                            <h1 style="color: #fff; margin-top: 150px">What is SportsTab?</h1>
+                            <hr/>
+                            <p>A strange new restaurant. A book with a nice cover. A far-out dancer. We built Thinglist
+                                so we could remember things in our personal life – a want to-do list.</p>
 
-<!-- Call to Action Panel -->
-<div class="middle-row">
-    <div class="row">
-        <div class="large-12 columns">
-
-            <div class="panel">
-                <h4>Get in touch!</h4>
-
-                <div class="row">
-                    <div class="large-9 columns">
-                        <div class="thinglist-iphone animated bounceInLeft">
-                            <p>Android Screenshot here</p>
+                            <p>
+                                Thinglist is available in English, Deutsch, Español, Français, Pусский, 日本語 and
+                                Italiano.</p>
+                            <a href="#" class="radius button" style="margin-top: 20px">Available on Play Store</a>
                         </div>
                     </div>
-                    <div class="large-3 columns">
-                        <a href="#" class="radius button right">Available on Play Store</a>
-                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
-<div class="bottom-row">
-    <footer class="row">
-        <div class="large-12 columns">
-            <p style="margin-bottom: 0">© Copyright SportsTab 2014. <a style="color: #fff" class="right">Contact Us</a>
-            </p>
-        </div>
-    </footer>
-</div>
+</header>
 </body>
 <script>
     $('#video').fitVids();

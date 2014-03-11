@@ -27,10 +27,10 @@ header > .row {
 }
 
 .name {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
-    color: #D72326;
+    color: #fff;
 }
 
 button.radius, .button.radius {
@@ -44,7 +44,6 @@ button:focus, button:hover, .button:focus, .button:hover {
 
 .middle-row {
     color: #fff;
-    background-color: #26262f;
     padding-top: 10px;
     padding-bottom: 10px;
 }
