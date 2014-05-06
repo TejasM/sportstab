@@ -1,45 +1,9 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportsTab</title>
-
-    <!-- If you are using CSS version, only link these 2 files, you may add app.css to use for your overrides if you like. -->
-    <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}">
-
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-    <link href='http://fonts.googleapis.com/css?family=Nunito:700' rel='stylesheet' type='text/css'>
-    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
-    <script src="{% static 'js/fitVids.js' %}"></script>
-    <link href='http://fonts.googleapis.com/css?family=Capriola' rel='stylesheet' type='text/css'>
-    <script src="{% static 'js/vendor/modernizr.min.js' %}"></script>
-</head>
-<body>
-<!-- Nav and Banner -->
-<header>
-    <div class="fade"></div>
-    <div style="background: #212121">
-        <div class="row">
-            <div class="large-2 small-12 columns">
-                <p style="text-align: center; margin-top: 20px"><img src="{% static 'img/logo.png' %}" width="100"/>
-                </p>
-            </div>
-            <div class="large-3 small-12 columns">
-                <p class="name" style="margin-top: 45px; margin-left: -30px">SportsTab</p>
-            </div>
-            <div class="large-6 small-12 columns">
-                <a href="#" style="margin-top: 45px" class="radius right button">Get it now on the <strong>PLAY
-                    STORE</strong></a>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Nav and Banner -->
-
-
+{% block additionalheaders %}
     <!-- Main Content Section -->
-
+{% endblock %}
+{% block content %}
     <div class="row" style="padding-bottom: 40px">
         <div class="large-12 columns">
             <div class="fluid-width-video-wrapper" style="height: 545px">
@@ -67,9 +31,6 @@
                             <p>A strange new restaurant. A book with a nice cover. A far-out dancer. We built Thinglist
                                 so we could remember things in our personal life – a want to-do list.</p>
 
-                            <p>
-                                Thinglist is available in English, Deutsch, Español, Français, Pусский, 日本語 and
-                                Italiano.</p>
                             <a href="#" class="radius button" style="margin-top: 20px">Available on Play Store</a>
                         </div>
                     </div>
@@ -78,9 +39,9 @@
             </div>
         </div>
     </div>
-</header>
-</body>
-<script>
-    $('#video').fitVids();
-</script>
-</html>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $('#video').fitVids();
+    </script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block additionalheaders %}
+    <!-- Main Content Section -->
+{% endblock %}
+{% block content %}
+    <!-- Call to Action Panel -->
+    <div class="middle-row">
+        <div class="row">
+            <div class="large-4 large-centered small-12 columns">
+                <div class="panel" style="margin-top: 50%">
+                    <h2 style="text-align: center">Sign In</h2>
+
+                    <form action="/login/" method="post" id="login-form">
+                        {% csrf_token %}
+                        <input type="hidden" value="login" id="type" name="type">
+                        <input name="email" placeholder="Email" type="text">
+                        <input name="password" type="password" placeholder="Password">
+
+                        <div class="row" style="margin-top: 1em">
+                            <div class="large-12 columns">
+                                <button id="login-button" type="submit" class="button radius">Login</button>
+                                <button id="signup-button" type="button" class="button radius">Sign Up</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(function () {
+            $('#signup-button').click(function () {
+                $('#type').val('signup');
+                $('#login-form').submit();
+            });
+        });
+    </script>
+{% endblock %}
