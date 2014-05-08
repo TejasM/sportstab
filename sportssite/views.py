@@ -1,8 +1,11 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from sportstab.models import VideoPlay
 
 __author__ = 'tmehta'
 
@@ -31,3 +34,10 @@ def login_user(request):
 @login_required
 def main_page(request):
     return render(request, 'main.html')
+
+
+@csrf_exempt
+def save_video(request):
+    video = VideoPlay.objects.create()
+    video.video.save(request.POST['name'], ContentFile(request.FILES['video']), save=False)
+    video.save()
