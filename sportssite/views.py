@@ -19,6 +19,7 @@ def login_user(request):
             user = User.objects.create(username=username, email=username)
             user.set_password(password)
             user.save()
+            user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('/main')
         else:
