@@ -54,7 +54,7 @@ def save_video(request):
     video.video.save(request.POST['name'], ContentFile(request.FILES['video']), save=False)
     video.save()
 
-def logoffhandler(request):
+def logouthandler(request):
 	logout(request)
 	redirect_url = request.GET.get("redirect","/")
 	return redirect(redirect_url)
