@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
+from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
 from sportstab.models import VideoPlay
 
@@ -52,4 +53,9 @@ def save_video(request):
     video = VideoPlay.objects.create()
     video.video.save(request.POST['name'], ContentFile(request.FILES['video']), save=False)
     video.save()
+
+def logoffhandler(request):
+	logout(request)
+	redirect_url = request.GET.get("redirect","/")
+	return redirect(redirect_url)
 
