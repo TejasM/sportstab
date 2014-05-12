@@ -56,6 +56,5 @@ def save_video(request):
 
 def logouthandler(request):
 	logout(request)
-	redirect_url = request.GET.get("redirect","/")
-	return redirect(redirect_url)
+	return render(request, 'main.html')
 
