@@ -36,7 +36,7 @@ header > .row {
 }
 
 .name {
-    font-size: 30px;
+    font-size: 45px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
     color: #fff;
@@ -59,6 +59,7 @@ button:focus, button:hover, .button:focus, .button:hover {
 
 .panel {
     background: #fff;
+    color: #555;
     padding: 5% 5%;
     text-align: center;
 }

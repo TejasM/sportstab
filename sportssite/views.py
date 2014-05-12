@@ -21,12 +21,17 @@ def login_user(request):
             user.save()
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('/main')
+            return redirect('/teams')
         else:
             user = authenticate(username=username, password=password)
             if user is None:
                 return redirect('/login')
             login(request, user)
+            
+            # TODO:
+            # If they have any teams, redirect to main
+            # Otherwise redirect to teams
+            
             return redirect('/main')
     else:
         return render(request, 'login.html')
@@ -37,8 +42,14 @@ def main_page(request):
     return render(request, 'main.html')
 
 
+@login_required
+def teams_page(request):
+    return render(request, 'teams.html')
+
+
 @csrf_exempt
 def save_video(request):
     video = VideoPlay.objects.create()
     video.video.save(request.POST['name'], ContentFile(request.FILES['video']), save=False)
     video.save()
+
