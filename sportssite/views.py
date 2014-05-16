@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-from sportstab.models import VideoPlay
+from sportstab.models import VideoPlay, Team
 
 __author__ = 'tmehta'
 
@@ -22,17 +22,17 @@ def login_user(request):
             user.save()
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('/teams')
+            return redirect('/main')
         else:
             user = authenticate(username=username, password=password)
             if user is None:
                 return redirect('/login')
             login(request, user)
-            
+
             # TODO:
             # If they have any teams, redirect to main
             # Otherwise redirect to teams
-            
+
             return redirect('/main')
     else:
         return render(request, 'login.html')
@@ -40,12 +40,8 @@ def login_user(request):
 
 @login_required
 def main_page(request):
-    return render(request, 'main.html')
-
-
-@login_required
-def teams_page(request):
-    return render(request, 'teams.html')
+    teams = Team.objects.filter(users__in=[request.user.id])
+    return render(request, 'main.html', {'teams': teams})
 
 
 @csrf_exempt
@@ -54,7 +50,8 @@ def save_video(request):
     video.video.save(request.POST['name'], ContentFile(request.FILES['video']), save=False)
     video.save()
 
+
 def logouthandler(request):
-	logout(request)
-	return render(request, 'main.html')
+    logout(request)
+    return redirect('/')
 
