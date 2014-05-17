@@ -15,9 +15,10 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST['email']
         password = request.POST['password']
-        type = request.POST['type']
-        if type == 'signup':
-            user = User.objects.create(username=username, email=username)
+        post_type = request.POST['type']
+        if post_type == 'signup':
+            user = User.objects.create(username=username, email=username, first_name=request.POST['first_name'],
+                                       last_name=request.POST['last_name'])
             user.set_password(password)
             user.save()
             user = authenticate(username=username, password=password)
@@ -28,11 +29,6 @@ def login_user(request):
             if user is None:
                 return redirect('/login')
             login(request, user)
-
-            # TODO:
-            # If they have any teams, redirect to main
-            # Otherwise redirect to teams
-
             return redirect('/main')
     else:
         return render(request, 'login.html')

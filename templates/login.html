@@ -14,7 +14,9 @@
                     <form action="/login/" method="post" id="login-form">
                         {% csrf_token %}
                         <input type="hidden" value="login" id="type" name="type">
-                        <input name="email" placeholder="Email" type="text">
+                        <input name="email" placeholder="Email" type="email">
+                        <input name="first_name" placeholder="First Name" type="text" class="hide-signup">
+                        <input name="last_name" placeholder="Last Name" type="text" class="hide-signup">
                         <input name="password" type="password" placeholder="Password">
 
                         <div class="row" style="margin-top: 1em">
@@ -32,9 +34,20 @@
 {% block scripts %}
     <script>
         $(function () {
+            var status = 0;
+            $('.hide-signup').hide();
             $('#signup-button').click(function () {
-                $('#type').val('signup');
-                $('#login-form').submit();
+                if (status == 0) {
+                    $('#login-button').hide();
+                    var $hide = $('.hide-signup');
+                    $hide.show();
+                    $hide.attr('required', "True");
+                    $('#type').val('signup');
+                    status = 1;
+                } else {
+
+                    $('#login-form').submit();
+                }
             });
         });
     </script>

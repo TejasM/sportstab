@@ -12,7 +12,7 @@ urlpatterns = patterns('',
                        # url(r'^sportssite/', include('sportssite.foo.urls')),
                        url(r'^login/', login_user),
                        url(r'^main/', main_page),
-                       url(r'^main/', include('sportstab.urls', namespace='plays')),
+                       url(r'^plays/', include('sportstab.urls', namespace='plays')),
                        url(r'^logout$', logouthandler),
                        # Uncomment the admin/doc line below to enable admin documentation:
                        url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

@@ -10,7 +10,7 @@ body {
     font-family: 'Capriola', sans-serif;
 }
 
-body, p, h1, h2, h3, span, a {
+body, p, h1, h2, h3, h4, span, a {
     font-family: 'Capriola', sans-serif;
 }
 
@@ -76,4 +76,13 @@ button:focus, button:hover, .button:focus, .button:hover {
     padding: 5%;
     margin-bottom: 1em;
     min-height: 3em;
+}
+
+.chosen-choices, .search-field {
+    min-height: 2em;
+}
+
+
+.chosen-choices, .search-field, input {
+    min-height: 2em;
 }

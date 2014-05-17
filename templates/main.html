@@ -26,13 +26,20 @@
                     <dl class="accordion" data-accordion>
                         {% for team in teams %}
                             <dd>
-                                <a href="#panel1">{{ team.team_name }}</a>
+                                <a href="#panel{{ forloop.counter }}">{{ team.team_name }}</a>
 
-                                <div id="panel1" class="content active">
-                                    {% for play in team.plays.all %}
-                                        <p><a href="{% url 'plays:view_play' %}">{{ play.name }}</a></p>
+                                <div id="panel{{ forloop.counter }}"
+                                     class="content {% if forloop.first %}active{% endif %}">
+                                    <a href="{% url 'plays:view_team' team.id %}"
+                                       class="radius button right">Go to Team</a>
 
-                                    {% endfor %}
+                                    <div class="row">
+                                        <div class="large-12 columns">
+                                            {% for play in team.plays.all %}
+                                                <p><a href="{% url 'plays:view_play' play.id %}">{{ play.name }}</a></p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                             </dd>
                         {% endfor %}
@@ -42,8 +49,11 @@
         </div>
     </div>
 {% endblock %}
-{% block scripts %}
+{% block inbodyscripts %}
     <script src="{% static 'js/foundation/foundation.tab.js' %}"></script>
+    <script src="{% static 'js/foundation/foundation.accordion.js' %}"></script>
+{% endblock %}
+{% block scripts %}
     <script>
     </script>
 {% endblock %}

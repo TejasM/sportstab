@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block additionalheaders %}
+{% endblock %}
+{% block content %}
+    <div class="row" style="background: #fff; padding-top: 2%; margin-top: 2%">
+        <div class="large-6 small-12 large-centered columns" style="text-align: center">
+            <form action="{% url 'plays:create_team' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="large-12 columns">
+                        <label>Team Name
+                            <input type="text" placeholder="Team Name" name="team-name"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <button class="radius button" id="add-players">Create Team</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
