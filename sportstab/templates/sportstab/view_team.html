@@ -24,17 +24,19 @@
                             <li><p>{{ player.first_name }} {{ player.last_name }}</p></li>
                         {% endfor %}
                     </ul>
-                    <h4>Add Players to the team</h4>
-                    {% csrf_token %}
-                    <select id="players-added" name="players-added" multiple data-placeholder="Choose players..."
-                            class="chosen-select">
-                        {% for id, first_name, last_name in possible_users %}
-                            <option value="{{ id }}">
-                                {{ first_name }} {{ last_name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button class="radius button" id="add-players" style="margin-top: 10px">Add Players</button>
+                    {% if team.manager == request.user %}
+                        <h4>Add Players to the team</h4>
+                        {% csrf_token %}
+                        <select id="players-added" name="players-added" multiple data-placeholder="Choose players..."
+                                class="chosen-select">
+                            {% for id, first_name, last_name in possible_users %}
+                                <option value="{{ id }}">
+                                    {{ first_name }} {{ last_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button class="radius button" id="add-players" style="margin-top: 10px">Add Players</button>
+                    {% endif %}
                 </div>
                 <div class="large-6 columns">
                     <h4>Plays</h4>
@@ -52,20 +54,22 @@
     <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
     <script>
         $(function () {
-            $('#add-players').click(function () {
-                var to_add = $('#players-added').val();
-                $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()}, function (data) {
-                    if (parseInt(data['fail']) == 0) {
-                        for (var i=0; i < to_add.length; i++) {
-                            var $added = $('option[value="' + to_add[i] + '"]');
-                            $('#players').append('<p>' + $added.text() + '</p>');
-                            $('option[value="' + to_add[i] + '"]').remove();
+            {% if team.manager == request.user %}
+                $('#add-players').click(function () {
+                    var to_add = $('#players-added').val();
+                    $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()}, function (data) {
+                        if (parseInt(data['fail']) == 0) {
+                            for (var i = 0; i < to_add.length; i++) {
+                                var $added = $('option[value="' + to_add[i] + '"]');
+                                $('#players').append('<p>' + $added.text() + '</p>');
+                                $('option[value="' + to_add[i] + '"]').remove();
+                            }
+                            $(".chosen-select").trigger("chosen:updated");
                         }
-                        $(".chosen-select").trigger("chosen:updated");
-                    }
+                    });
                 });
-            });
-            $(".chosen-select").chosen();
+                $(".chosen-select").chosen();
+            {% endif %}
         });
     </script>
 {% endblock %}
