@@ -1,4 +1,4 @@
--allow-unverified PIL
+--allow-unverified PIL
 Django==1.5.1
 dj-database-url==0.2.2
 dj-static==0.0.5
