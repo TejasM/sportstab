@@ -15,6 +15,6 @@ class VideoPlay(models.Model):
 # Create your models here.
 class Team(models.Model):
     team_name = models.CharField(max_length=400)
-    users = models.ManyToManyField(User)
-    manager = models.ForeignKey(User, related_name='coach', default=None, null=True)
+    users = models.ManyToManyField(User, related_name='players')
+    managers = models.ManyToManyField(User, related_name='coach')
     plays = models.ManyToManyField(Play)
