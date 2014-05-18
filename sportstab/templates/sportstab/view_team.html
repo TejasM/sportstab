@@ -18,13 +18,13 @@
             </div>
             <div class="row">
                 <div class="large-6 columns">
-                    <h4>Players</h4>
+                    <h4>Members</h4>
                     <ul style="list-style: none" id="players">
                         {% for player in team.users.all %}
                             <li><p>{{ player.first_name }} {{ player.last_name }}</p></li>
                         {% endfor %}
                     </ul>
-                    {% if team.manager == request.user %}
+                    {% if team.manager == user %}
                         <h4>Add Players to the team</h4>
                         {% csrf_token %}
                         <select id="players-added" name="players-added" multiple data-placeholder="Choose players..."
@@ -54,7 +54,7 @@
     <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
     <script>
         $(function () {
-            {% if team.manager == request.user %}
+            {% if team.manager == user %}
                 $('#add-players').click(function () {
                     var to_add = $('#players-added').val();
                     $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()}, function (data) {
