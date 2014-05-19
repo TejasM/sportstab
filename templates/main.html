@@ -27,8 +27,8 @@
                             <div>
                                 {% for p in user.plays_set.all %}
                                     <div>
-                                        <img src="{{ p.preview }}"/>
                                         {{ p.name }}
+                                        <img src="{{ p.preview }}"/>
                                     </div>
                                 {% endfor %}
                             </div>

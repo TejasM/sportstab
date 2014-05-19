@@ -72,33 +72,24 @@ def create_team(request):
 #@login_required
 @csrf_exempt
 def create_play(request):
-    debug = 'Debug: '
     try:
-        debug += ('try ')
         user = request.POST['user']
-        debug += (user + ' ')
         name = request.POST['name']
-        debug += (name + ' ')
         jsonstring = request.POST['jsonstring']
-        debug += (jsonstring + ' ')
 
         # Make the play object
         play_creator = User.objects.get(username=user)
-        debug += ('creator ')
         newplay = Play(creator=play_creator,
                        name=name,
                        jsonstring=jsonstring
         )
         newplay.save()
-        debug += ('saved_play ')
 
         # Save the preview image
         filename = user + '.' + name + '.png'
-        debug += ('preview ')
         newplay.preview.save(filename, ContentFile(request.FILES['preview'].read()))
-
     except:
-        return HttpResponse(debug)
+        return HttpResponse('Failed')
 
     return HttpResponse('Success')
 

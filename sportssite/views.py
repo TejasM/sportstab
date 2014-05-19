@@ -44,7 +44,7 @@ def main_page(request):
     my_teams = Team.objects.filter(users__in=[request.user.id])
     all_teams = Team.objects.filter(users__in=[request.user.id])
     feeds = Action.objects.all().order_by('-timestamp')[:20]
-    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds})
+    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds, 'user':request.user})
 
 
 @login_required
