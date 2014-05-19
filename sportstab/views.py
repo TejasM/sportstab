@@ -72,12 +72,11 @@ def create_team(request):
 #@login_required
 @csrf_exempt
 def create_play(request):
-    debug = 'Debug: '
+    debug = 'Request: ' + str(request) + '. Debug: '
     # Maybe this loop is not needed, saw it online
     for x in range (1,100):
         try:
             user = request.POST['user' % x]
-            return HttpResponse('Test 3')
             debug += (user + ' ')
             name = request.POST['name' % x]
             debug += (name + ' ')
