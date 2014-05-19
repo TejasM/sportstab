@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from sportstab.models import Team
+from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
@@ -59,29 +60,37 @@ def create_team(request):
 
 # TODO -- integrate with login (add a username to the request)
 #@login_required
-#@csrf_exempt
+@csrf_exempt
 def create_play(request):
     
     # Maybe this loop is not needed, saw it online
+    debug = 'Debug: '
     for x in range (1,100):
         try:
             user = request.POST['user'%x]
+            debug += (user + ' ')
             name = request.POST['name'%x]
+            debug += (name + ' ')
             jsonstring = request.POST['jsonstring'%x]
+            debug += (jsonstring + ' ')
+            
+            # Make the play object
+            play_creator = User.objects.get(username=user)
+            debug += ('creator ')
+            newplay = Play(creator=play_creator,
+                           name=name,
+                           jsonstring=jsonstring
+                           )
+            newplay.save()
+            debug += ('saved_play ')
+
+            # Save the preview image
+            filename = user+'.'+name+'.png'
+            debug += ('preview ')
+            newplay.preview.save(filename, ContentFile(request.FILES['preview'%x].read()))
+
         except:
-            break
-
-        # Make the play object
-        play_creator = User.objects.get(username=user)
-        newplay = Play(creator=play_creator,
-                       name=name,
-                       jsonstring=jsonstring
-                       )
-        newplay.save()
-
-        # Save the preview image
-        filename = user+'.'+name+'.png'
-        newplay.preview.save(filename, ContentFile(request.FILES['preview'%x].read()))
+            return HttpResponse(debug)
 
     return HttpResponse('Success')
 
