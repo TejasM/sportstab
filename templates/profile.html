@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block additionalheaders %}
+{% endblock %}
+{% block content %}
+    <div class="row" style="background: #fff; padding-top: 2%; margin-top: 2%" xmlns="http://www.w3.org/1999/html">
+        <div class="large-6 columns" style="text-align: center">
+            <form action="/profile/" class="dropzone" id="main">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="pic">
+                {% if user.profile.picture %}
+                    <img id="profile_im" src="/media/{{ user.get_profile.picture }}">
+                {% else %}
+                    <img id="profile_im" src="{% static 'img/male_avatar20-512.png' %}">
+                {% endif %}
+
+                <div class="fallback">
+                    <input name="file" type="file"
+                           style="background:{% static 'img/male_avatar20-512.png' %}; width: 512px;height: 512px"/>
+                </div>
+            </form>
+
+        </div>
+        <div class="large-6 columns" style="text-align: left">
+            <div class="row">
+                <div class="large-12 columns">
+                    <h3 style="text-align: center; margin-bottom: 20px">{{ user.first_name }} {{ user.last_name }}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns">
+                    <p><strong>Favourite Position: </strong><span id="pos-id">{{ user.profile.fav_position }}</span></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns">
+                    <p><strong>Affiliation: </strong><span id="aff-id">{{ user.profile.affiliation }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns">
+                    <button class="radius button right" id="edit">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/dropzone.js' %}"></script>
+    <script>
+        $(function () {
+            Dropzone.autoDiscover = false;
+            var myDropzone = new Dropzone("#main", {'previewTemplate': '<span></span>'});
+            myDropzone.on('success', function (res, data) {
+                if (parseInt(data['fail']) == 0) {
+                    $('#profile_im').attr('src', '/media/' + data['link']);
+                }
+            });
+            var status = 0;
+
+            $('#edit').click(function () {
+                var $pos;
+                var $aff;
+                if (status == 0) {
+                    $(this).text('Update');
+                    $pos = $('#pos-id');
+                    $pos.before("<input type='text' id='pos-id' value='" + $pos.text() + "'>");
+                    $pos.remove();
+                    $aff = $('#aff-id');
+                    $aff.before("<input type='text' id='aff-id' value='" + $aff.text() + "'>");
+                    $aff.remove();
+                    status = 1;
+                } else {
+                    $pos = $('#pos-id');
+                    $aff = $('#aff-id');
+                    $.post('/profile/', {'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                        'fav-pos': $pos.val(), 'aff': $aff.val(), 'type': 'update'
+                    }, function (data) {
+                        $pos.before("<span id='pos-id'>" + $pos.val() + "</span>");
+                        $pos.remove();
+                        $aff.before("<span id='aff-id'>" + $aff.val() + "</span>");
+                        $aff.remove();
+                        $('#edit').text('Edit');
+                    });
+                    status = 0;
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.views.generic import TemplateView
-from sportssite.views import login_user, main_page, logouthandler
+from sportssite.views import login_user, main_page, logouthandler, profile_page
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -12,6 +14,7 @@ urlpatterns = patterns('',
                        # url(r'^sportssite/', include('sportssite.foo.urls')),
                        url(r'^login/', login_user),
                        url(r'^main/', main_page),
+                       url(r'^profile/', profile_page),
                        url(r'^plays/', include('sportstab.urls', namespace='plays')),
                        url(r'^logout$', logouthandler),
                        # Uncomment the admin/doc line below to enable admin documentation:
@@ -20,3 +23,9 @@ urlpatterns = patterns('',
                        # Uncomment the next line to enable the admin:
                        url(r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+                            (r'^media/(?P<path>.*)$', 'django.views.static.serve',
+                             {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+    )

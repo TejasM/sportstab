@@ -16,13 +16,24 @@ def view_play(request):
 
 @login_required
 def view_team(request, team_id):
+    player = False
+    manager = False
     try:
         team = Team.objects.get(pk=team_id, users__in=[request.user.id])
+        player = True
     except Team.DoesNotExist:
-        return redirect('/main')
+        try:
+            team = Team.objects.get(pk=team_id, manager__in=[request.user.id])
+            manager = True
+        except Team.DoesNotExist:
+            return redirect('/main')
     if request.method == "POST":
         ids = request.POST.getlist('players-added[]')
-        throughmodel = team.users.through
+        players = request.POST.get('players', '')
+        if players == '':
+            throughmodel = team.managers.through
+        else:
+            throughmodel = team.users.through
         to_add = []
         for player_id in ids:
             to_add.append(throughmodel(user_id=player_id, team_id=team.pk))
@@ -31,14 +42,15 @@ def view_team(request, team_id):
     else:
         possible_users = User.objects.filter(~Q(pk__in=team.users.values_list('id', flat=True))).values_list(
             'id', 'first_name', 'last_name')
-        return render(request, "sportstab/view_team.html", {'team': team, 'possible_users': possible_users})
+        return render(request, "sportstab/view_team.html",
+                      {'team': team, 'possible_users': possible_users, 'player': player, 'manager': manager})
 
 
 @login_required
 def create_team(request):
     if request.method == "POST":
-        team = Team.objects.create(team_name=request.POST['team-name'], manager=request.user)
-        team.users.add(request.user)
+        team = Team.objects.create(team_name=request.POST['team-name'])
+        team.managers.add(request.user)
         team.save()
         return redirect(reverse('plays:view_team', args=(team.id,)))
     else:

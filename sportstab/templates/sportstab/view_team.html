@@ -35,7 +35,16 @@
                                 </option>
                             {% endfor %}
                         </select>
-                        <button class="radius button" id="add-players" style="margin-top: 10px">Add Players</button>
+                        <div class="row">
+                            <div class="large-6 columns">
+                                <button class="radius button" id="add-players" style="margin-top: 10px">Add Players
+                                </button>
+                            </div>
+                            <div class="large-6 columns">
+                                <button class="radius button" id="add-managers" style="margin-top: 10px">Add Managers
+                                </button>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
                 <div class="large-6 columns">
@@ -57,12 +66,25 @@
             {% if team.manager == user %}
                 $('#add-players').click(function () {
                     var to_add = $('#players-added').val();
+                    $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'players': true}, function (data) {
+                        if (parseInt(data['fail']) == 0) {
+                            for (var i = 0; i < to_add.length; i++) {
+                                var $added = $('option[value="' + to_add[i] + '"]');
+                                $('#players').append('<p>' + $added.text() + '</p>');
+                                $added.remove();
+                            }
+                            $(".chosen-select").trigger("chosen:updated");
+                        }
+                    });
+                });
+                $('#add-managers').click(function () {
+                    var to_add = $('#players-added').val();
                     $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()}, function (data) {
                         if (parseInt(data['fail']) == 0) {
                             for (var i = 0; i < to_add.length; i++) {
                                 var $added = $('option[value="' + to_add[i] + '"]');
                                 $('#players').append('<p>' + $added.text() + '</p>');
-                                $('option[value="' + to_add[i] + '"]').remove();
+                                $added.remove();
                             }
                             $(".chosen-select").trigger("chosen:updated");
                         }
