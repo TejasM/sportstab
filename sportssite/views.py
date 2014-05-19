@@ -36,8 +36,9 @@ def login_user(request):
 
 @login_required
 def main_page(request):
-    teams = Team.objects.filter(users__in=[request.user.id])
-    return render(request, 'main.html', {'teams': teams})
+    my_teams = Team.objects.filter(users__in=[request.user.id])
+    all_teams = Team.objects.filter(users__in=[request.user.id])
+    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams})
 
 
 @csrf_exempt

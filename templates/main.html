@@ -1,59 +1,126 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block additionalheaders %}
+    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="row" style="background: #fff; padding-top: 2%; margin-top: 2%">
-        <div class="large-12 large-centered columns" style="text-align: center">
-            <h3>Welcome {{ user.email }}!</h3>
-        </div>
-        <div class="large-12 columns" style="padding-top: 2%;">
-            <dl class="tabs vertical" data-tab>
-                <dd class="active"><a href="#panel1a">News</a></dd>
-                <dd><a href="#panel2a">Teams</a></dd>
+    <div class="row" style="background: #efefef; margin-top: 2%; ">
+        <div class="large-12 columns">
+            <dl class="tabs vertical" style="padding-left: 0; width: 120px; " data-tab>
+                <dd class="active"><a href="#panel1a" style="font-weight: bold;">Home</a></dd>
+                <dd><a href="#panel2a" style="font-weight: bold;">Teams</a></dd>
             </dl>
-            <div class="tabs-content vertical">
+            <div class="tabs-content vertical" style="background: white;">
                 <div class="content active" id="panel1a">
-                    <p>Notifications coming soon.</p>
-                </div>
-                <div class="content" id="panel2a">
-                    <div class="row">
-                        <div class="large-4 small-12 large-offset-8 columns">
-                            <a href="{% url 'plays:create_team' %}" class="radius button"
-                               style="font-weight: bold;">Create Team</a>
+                    <div class="small-8 columns" >
+                        <div style="text-align: center;" >
+                            <h4>Plays</h4>
+                            <div class="row">
+                                <div class="small-11 columns" >
+                                    <input type="text" name="search-terms" placeholder="Filter by team or keywords">
+                                </div>
+                                <div class="small-1 columns" style="padding: 0;" >
+                                    <div class="filter_button">Go</div>
+                                </div>
+                            </div>
+                            {%for t in my_teams %}
+                            {%for p in t.plays.all %}
+                                <img src="{{ p.preview }}"/>
+                            {% endfor %}
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                    <div class="small-4 columns" >
+                        <div style="text-align: center;" >
+                            <h4>News</h4>
+                            <div class="class_news_item">News Item 1</div>
+                            <div class="class_news_item">News Item 2</div>
+                            <div class="class_news_item">News Item 3</div>
+                            <div class="class_news_item">News Item 4</div>
+                            <div class="class_news_item">News Item 5</div>
+                            <div class="class_news_item">News Item 6</div>
                         </div>
                     </div>
-                    <dl class="accordion" data-accordion>
-                        {% for team in teams %}
-                            <dd>
-                                <a href="#panel{{ forloop.counter }}">{{ team.team_name }}</a>
-
-                                <div id="panel{{ forloop.counter }}"
-                                     class="content {% if forloop.first %}active{% endif %}">
-                                    <a href="{% url 'plays:view_team' team.id %}"
-                                       class="radius button right">Go to Team</a>
-
-                                    <div class="row">
-                                        <div class="large-12 columns">
-                                            {% for play in team.plays.all %}
-                                                <p><a href="{% url 'plays:view_play' play.id %}">{{ play.name }}</a></p>
-                                            {% endfor %}
+                </div>
+                <div class="content" id="panel2a">
+                    <div class="row" style="padding-top: 20px; padding-bottom: 10px; ">
+                        <div class="small-12 columns" style="text-align: center; " >
+                            <dl class="accordion" data-accordion>
+                                <dd>
+                                    <a href="#panel_join" style="background: white;" onClick="chosen_select();">
+                                        <div class="class_team_actions">
+                                        Join Team
                                         </div>
+                                    </a>
+                                    <div id="panel_join" class="content">
+                                        {% csrf_token %}
+                                        <select id="team-to-join" name="team-to-join" multiple data-placeholder="Select a team"
+                                                class="chosen-select">
+                                            {% for team in all_teams %}
+                                                <option value="{{ team }}">
+                                                    {{ team.team_name }} by {{ team.manager }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button class="radius button" id="join-team" style="margin-top: 10px">Join</button>
                                     </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px; padding-bottom: 10px; ">
+                        <div class="small-12 columns" style="text-align: center; " >
+                            <a href="{% url 'plays:create_team' %}">
+                                <div class="class_team_actions">
+                                Create Team
                                 </div>
-                            </dd>
-                        {% endfor %}
-                    </dl>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 10px; padding-bottom: 10px; ">
+                        <div class="small-12 columns" style="text-align: center; " >
+                            <dl class="accordion" data-accordion>
+                                <dd>
+                                    <a href="#panel_edit"  style="background: white; padding: 0px; ">
+                                        <div class="class_team_actions">
+                                        Edit Team
+                                        </div>
+                                    </a>
+                                    <div id="panel_edit" class="content" style="padding: 0px; ">
+                                        {% for team in my_teams %}
+                                            <a href="{% url 'plays:view_team' team.id %}" style="background:white; padding: 0;">
+                                                <div class="class_team_name">
+                                                {{ team.team_name }}
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
 {% block inbodyscripts %}
     <script src="{% static 'js/foundation/foundation.tab.js' %}"></script>
     <script src="{% static 'js/foundation/foundation.accordion.js' %}"></script>
 {% endblock %}
 {% block scripts %}
+    <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
     <script>
+        function chosen_select() {
+            $(".chosen-select").chosen();
+        }
+        $(function () {
+            $(".chosen-select").chosen();            
+        });
+        function filter() {
+            // Go over all images and if tag is not present, make it invisible
+        }
     </script>
 {% endblock %}

@@ -22,7 +22,7 @@ body, p, h1, h2, h3, h4, span, a {
 }
 
 header {
-    background: #34343f url('../img/michael-jordan-quotes1.jpg') center center no-repeat;
+    background: #606060 center center no-repeat;
     background-size: cover;
     position: relative;
     overflow-x: hidden;
@@ -86,3 +86,47 @@ button:focus, button:hover, .button:focus, .button:hover {
 .chosen-choices, .search-field, input {
     min-height: 2em;
 }
+
+div.class_team_actions {
+    background: white; 
+    font-size: 24px; 
+    font-weight: bold; 
+    color: #11FF33; 
+    font-family: arial; 
+    padding: 20px; 
+}
+
+div.class_team_actions:hover {
+    background: #F5FFF5; 
+    color: #11DD11; 
+}
+
+div.class_news_item {
+    padding: 10px;
+}
+
+div.class_team_name {
+    background: white; 
+    font-size: 16px; 
+    font-weight: bold; 
+    font-family: arial; 
+    padding: 10px;
+    color: #000000; 
+}
+
+div.class_team_name:hover {
+    background: #f0f0f0; 
+}
+
+div.filter_button {
+    padding-top: 12px;
+    height: 40px;
+    background-color: #56ff56;
+    border-radius: 10px;
+}
+
+div.filter_button:hover {
+    cursor: pointer;
+    background-color: #45ee45;
+}
+
