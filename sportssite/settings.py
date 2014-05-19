@@ -119,12 +119,12 @@ import os
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),)
 
-import dj_database_url
-
-DATABASES['default'] = dj_database_url.config()
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# import dj_database_url
+#
+# DATABASES['default'] = dj_database_url.config()
+#
+# # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'sportstab',
     'south',
+    'actstream',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -168,4 +169,13 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+ACTSTREAM_SETTINGS = {
+    'MODELS': ('auth.user', 'sportstab.play', 'sportstab.team'),
+    'MANAGER': 'actstream.managers.ActionManager',
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
 }

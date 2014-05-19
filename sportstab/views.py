@@ -1,13 +1,19 @@
 # Create your views here.
 import json
+from actstream import action
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+<<<<<<< HEAD
 from sportstab.models import Team
 from django.views.decorators.csrf import csrf_exempt
+=======
+from sportstab.models import Team, Play
+>>>>>>> Init pledges
 
 
 @login_required
@@ -36,8 +42,13 @@ def view_team(request, team_id):
         else:
             throughmodel = team.users.through
         to_add = []
+        names = ""
         for player_id in ids:
+            user = User.objects.get(pk=player_id)
+            names += user.first_name + ' ' + user.last_name + ','
             to_add.append(throughmodel(user_id=player_id, team_id=team.pk))
+        names = names[:-1]
+        action.send(request.user, verb='added ' + names + ' to ' + team.team_name)
         throughmodel.objects.bulk_create(to_add)
         return HttpResponse(json.dumps({"fail": 0}), content_type='application/json')
     else:
@@ -53,6 +64,7 @@ def create_team(request):
         team = Team.objects.create(team_name=request.POST['team-name'])
         team.managers.add(request.user)
         team.save()
+        action.send(request.user, verb='created team: ' + team.team_name)
         return redirect(reverse('plays:view_team', args=(team.id,)))
     else:
         return render(request, "sportstab/create_team.html")
@@ -62,8 +74,8 @@ def create_team(request):
 #@login_required
 @csrf_exempt
 def create_play(request):
-    
     # Maybe this loop is not needed, saw it online
+<<<<<<< HEAD
     debug = 'Debug: '
     for x in range (1,100):
         try:
@@ -91,6 +103,27 @@ def create_play(request):
 
         except:
             return HttpResponse(debug)
+=======
+    for x in range(1, 100):
+        try:
+            user = request.POST['user' % x]
+            name = request.POST['name' % x]
+            jsonstring = request.POST['jsonstring' % x]
+        except:
+            break
+
+        # Make the play object
+        play_creator = User.objects.get(username=user)
+        newplay = Play(creator=play_creator,
+                       name=name,
+                       jsonstring=jsonstring
+        )
+        newplay.save()
+
+        # Save the preview image
+        filename = user + '.' + name + '.png'
+        newplay.preview.save(filename, ContentFile(request.FILES['preview' % x].read()))
+>>>>>>> Init pledges
 
     return HttpResponse('Success')
 
