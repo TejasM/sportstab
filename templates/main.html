@@ -25,7 +25,8 @@
                                 </div>
                             </div>
                             <div>
-                                {% for p in user.plays_set.all %}
+                                You have {{ user.play_set.count }} plays!
+                                {% for p in user.play_set.all %}
                                     <div>
                                         {{ p.name }}
                                         <img src="{{ p.preview }}"/>
