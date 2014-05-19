@@ -76,6 +76,7 @@ def create_play(request):
     # Maybe this loop is not needed, saw it online
     for x in range (1,100):
         try:
+            debug += ('try ')
             user = request.POST['user' % x]
             debug += (user + ' ')
             name = request.POST['name' % x]
