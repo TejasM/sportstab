@@ -72,7 +72,6 @@ def create_team(request):
 #@login_required
 @csrf_exempt
 def create_play(request):
-    return HttpResponse('Test 1')
     debug = 'Debug: '
     # Maybe this loop is not needed, saw it online
     for x in range (1,100):
@@ -83,6 +82,7 @@ def create_play(request):
             debug += (name + ' ')
             jsonstring = request.POST['jsonstring' % x]
             debug += (jsonstring + ' ')
+            return HttpResponse('Test 2')
 
             # Make the play object
             play_creator = User.objects.get(username=user)
