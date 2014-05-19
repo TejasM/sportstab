@@ -4,8 +4,8 @@ from django.db import models
 
 class Play(models.Model):
     name = models.CharField(max_length=400)
-    #tags = models.CharField(max_length=400)
-    #preview = models.FileField(upload_to='screenshots/', null=True)
+    tags = models.CharField(max_length=400)
+    preview = models.FileField(upload_to='screenshots/', null=True)
     jsonstring = models.CharField(max_length=10000000, default="")
 
 
