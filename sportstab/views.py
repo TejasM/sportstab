@@ -23,7 +23,7 @@ def view_team(request, team_id):
         player = True
     except Team.DoesNotExist:
         try:
-            team = Team.objects.get(pk=team_id, manager__in=[request.user.id])
+            team = Team.objects.get(pk=team_id, managers__in=[request.user.id])
             manager = True
         except Team.DoesNotExist:
             return redirect('/main')
