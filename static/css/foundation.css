@@ -2501,15 +2501,15 @@ div.switch {
     float: left; }
     .tabs dd > a {
       display: block;
-      background: #efefef;
+      background: #ffffff;
       color: #222222;
       padding: 1rem 2rem;
       font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
       font-size: 1rem; }
       .tabs dd > a:hover {
-        background: #e1e1e1; }
+        color: #990000; }
     .tabs dd.active a {
-      background: white; }
+      color: #CC0000; }
   .tabs.radius dd:first-child a {
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px; }
