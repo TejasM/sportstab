@@ -76,13 +76,13 @@ def create_play(request):
     # Maybe this loop is not needed, saw it online
     for x in range (1,100):
         try:
+            return HttpResponse('Test 3')
             user = request.POST['user' % x]
             debug += (user + ' ')
             name = request.POST['name' % x]
             debug += (name + ' ')
             jsonstring = request.POST['jsonstring' % x]
             debug += (jsonstring + ' ')
-            return HttpResponse('Test 2')
 
             # Make the play object
             play_creator = User.objects.get(username=user)
