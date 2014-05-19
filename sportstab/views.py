@@ -84,7 +84,7 @@ def create_play(request):
                        jsonstring=jsonstring
         )
         newplay.save()
-        action.send(user, verb='created a new play: ' + name)
+        #action.send(user, verb='created a new play: ' + name)
         # Save the preview image
         filename = user + '.' + name + '.png'
         newplay.preview.save(filename, ContentFile(request.FILES['preview'].read()))
