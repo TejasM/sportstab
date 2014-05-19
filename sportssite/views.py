@@ -1,4 +1,6 @@
 import json
+from actstream import action
+from actstream.models import Action
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -25,6 +27,7 @@ def login_user(request):
             user.save()
             user = authenticate(username=username, password=password)
             login(request, user)
+            action.send(request.user, verb='joined Sportstab!')
             return redirect('/main')
         else:
             user = authenticate(username=username, password=password)
@@ -40,7 +43,8 @@ def login_user(request):
 def main_page(request):
     my_teams = Team.objects.filter(users__in=[request.user.id])
     all_teams = Team.objects.filter(users__in=[request.user.id])
-    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams})
+    feeds = Action.objects.all().order_by('-timestamp')[:20]
+    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds})
 
 
 @login_required

@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'sportstab',
     'south',
+    'actstream',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -168,4 +169,13 @@ LOGGING = {
             'propagate': True,
         },
     }
+}
+
+ACTSTREAM_SETTINGS = {
+    'MODELS': ('auth.user', 'sportstab.play', 'sportstab.team'),
+    'MANAGER': 'actstream.managers.ActionManager',
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
 }
