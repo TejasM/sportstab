@@ -14,7 +14,7 @@
                 <div class="content active" id="panel1a">
                     <div class="small-8 columns">
                         <div style="text-align: center;">
-                            <h4 style="color: #990000; padding-bottom: 20px; " >Plays</h4>
+                            <h4 style="color: #990000; padding-bottom: 20px; ">Plays</h4>
 
                             <div class="row">
                                 <div class="small-11 columns">
@@ -37,14 +37,11 @@
                     </div>
                     <div class="small-4 columns">
                         <div style="text-align: center;">
-                            <h4 style="color: #990000; padding-bottom: 20px; " >Recent Activity</h4>
-
-                            <div class="class_news_item">News Item 1</div>
-                            <div class="class_news_item">News Item 2</div>
-                            <div class="class_news_item">News Item 3</div>
-                            <div class="class_news_item">News Item 4</div>
-                            <div class="class_news_item">News Item 5</div>
-                            <div class="class_news_item">News Item 6</div>
+                            <h4 style="color: #990000; padding-bottom: 20px; ">Recent Activity</h4>
+                            {% for feed in feeds %}
+                                <div
+                                    class="class_news_item">{{ feed.actor.first_name }} {{ feed.actor.last_name }} {{ feed.verb }}</div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
