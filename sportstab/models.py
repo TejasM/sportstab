@@ -3,9 +3,10 @@ from django.db import models
 
 
 class Play(models.Model):
+    creator = models.ForeignKey(User, null=True, blank=True)
     name = models.CharField(max_length=400)
     tags = models.CharField(max_length=400)
-    preview = models.FileField(upload_to='screenshots/', null=True)
+    preview = models.ImageField(upload_to='screenshots/', blank=True)
     jsonstring = models.CharField(max_length=10000000, default="")
 
 

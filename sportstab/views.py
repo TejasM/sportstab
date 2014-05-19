@@ -55,3 +55,33 @@ def create_team(request):
         return redirect(reverse('plays:view_team', args=(team.id,)))
     else:
         return render(request, "sportstab/create_team.html")
+
+
+# TODO -- integrate with login (add a username to the request)
+#@login_required
+#@csrf_exempt
+def create_play(request):
+    
+    # Maybe this loop is not needed, saw it online
+    for x in range (1,100):
+        try:
+            user = request.POST['user'%x]
+            name = request.POST['name'%x]
+            jsonstring = request.POST['jsonstring'%x]
+        except:
+            break
+
+        # Make the play object
+        play_creator = User.objects.get(username=user)
+        newplay = Play(creator=play_creator,
+                       name=name,
+                       jsonstring=jsonstring
+                       )
+        newplay.save()
+
+        # Save the preview image
+        filename = user+'.'+name+'.png'
+        newplay.preview.save(filename, ContentFile(request.FILES['preview'%x].read()))
+
+    return HttpResponse('Success')
+

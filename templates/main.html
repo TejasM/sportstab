@@ -24,11 +24,14 @@
                                     <div class="filter_button">Go</div>
                                 </div>
                             </div>
-                            {% for t in my_teams %}
-                                {% for p in t.plays.all %}
-                                    <img src="{{ p.preview }}"/>
+                            <div>
+                                {% for p in user.plays_set.all %}
+                                    <div>
+                                        <img src="{{ p.preview }}"/>
+                                        {{ p.name }}
+                                    </div>
                                 {% endfor %}
-                            {% endfor %}
+                            </div>
                         </div>
 
                     </div>
