@@ -24,12 +24,12 @@
                                     <div class="filter_button">Go</div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="row">
                                 You have {{ user.play_set.count }} plays!
                                 {% for p in user.play_set.all %}
-                                    <div>
-                                        {{ p.name }}
-                                        <img src="/media/{{ p.preview.name }}"/>
+                                    <div class="small-1 columns" style="width: 200px; height: 300px;">
+                                        <p>{{ p.name }}</p>
+                                        <p><img src="/media/{{ p.preview.name }}"/></p>
                                     </div>
                                 {% endfor %}
                             </div>
