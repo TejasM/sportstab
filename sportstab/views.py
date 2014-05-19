@@ -72,35 +72,33 @@ def create_team(request):
 #@login_required
 @csrf_exempt
 def create_play(request):
-    debug = 'Request: ' + str(request) + '. Debug: '
-    # Maybe this loop is not needed, saw it online
-    for x in range (1,100):
-        try:
-            debug += ('try ')
-            user = request.POST['user' % x]
-            debug += (user + ' ')
-            name = request.POST['name' % x]
-            debug += (name + ' ')
-            jsonstring = request.POST['jsonstring' % x]
-            debug += (jsonstring + ' ')
+    debug = 'Debug: '
+    try:
+        debug += ('try ')
+        user = request.POST['user']
+        debug += (user + ' ')
+        name = request.POST['name']
+        debug += (name + ' ')
+        jsonstring = request.POST['jsonstring']
+        debug += (jsonstring + ' ')
 
-            # Make the play object
-            play_creator = User.objects.get(username=user)
-            debug += ('creator ')
-            newplay = Play(creator=play_creator,
-                           name=name,
-                           jsonstring=jsonstring
-            )
-            newplay.save()
-            debug += ('saved_play ')
+        # Make the play object
+        play_creator = User.objects.get(username=user)
+        debug += ('creator ')
+        newplay = Play(creator=play_creator,
+                       name=name,
+                       jsonstring=jsonstring
+        )
+        newplay.save()
+        debug += ('saved_play ')
 
-            # Save the preview image
-            filename = user + '.' + name + '.png'
-            debug += ('preview ')
-            newplay.preview.save(filename, ContentFile(request.FILES['preview' % x].read()))
+        # Save the preview image
+        filename = user + '.' + name + '.png'
+        debug += ('preview ')
+        newplay.preview.save(filename, ContentFile(request.FILES['preview'].read()))
 
-        except:
-            return HttpResponse(debug)
+    except:
+        return HttpResponse(debug)
 
     return HttpResponse('Success')
 
