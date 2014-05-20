@@ -169,7 +169,7 @@
             block_img.src = block_src;
 
 
-            var src = "uoft_court.jpg";
+            var src = "{% static 'img/uoft_court.jpg' %}";
             var loaded = false;
             bkgrd.onload = function () {
                 //WARNING: not checking if JSON is loaded...
