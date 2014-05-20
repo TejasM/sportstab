@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% block additionalheaders %}
     <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
     <div class="row" style="background: #fff; padding-top: 2%; margin-top: 2%">
@@ -17,9 +18,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="large-12 columns">
+                <div class="large-8 small-12 columns">
                     <canvas id="outline" width="500" height="1000">
                     </canvas>
+                </div>
+                <div class="large-4 columns">
+                    <i class="fa fa-play" style="color: orangered" id="play"></i>
+                    <i class="fa fa-fast-backward" style="color: orangered" id="reset"></i>
                 </div>
             </div>
         </div>
@@ -149,7 +154,13 @@
             ball.setR(ball_radius);
         }
 
-        window.onload = function () {
+        var play_status = 0;
+        $('#reset').click(function () {
+            replay_progress = 0;
+            start_play();
+        });
+
+        function start_play() {
             play = {{ play.jsonstring|safe }};
             move = play.steps[0].playerMove;
             outline = document.getElementById("outline");
@@ -175,8 +186,28 @@
                 //WARNING: not checking if JSON is loaded...
                 mainLoop(context, ball_img, block_img);
             };
+            var $play = $('#play');
+            $play.removeClass('fa-play');
+            $play.addClass('fa-pause');
+            play_status = 1;
 
-        };
+        }
+
+        function stop_play() {
+            play_status = 0;
+            var $play = $('#play');
+            $play.removeClass('fa-pause');
+            $play.addClass('fa-play');
+        }
+
+        $('#play').click(function () {
+            if (play_status == 0) {
+                start_play();
+            } else {
+                stop_play();
+            }
+
+        });
 
         function unnormalizePosition() {
             var move = play.steps[0].playerMove;
@@ -215,6 +246,8 @@
             }
         }
 
+        var speed = 20;
+
         function drawLoop(ctx) {
 
             updateHasBall(play.steps[0].whoHasBall);
@@ -250,10 +283,10 @@
                 ball.draw();
             }
             replay_progress++;
-            if (replay_progress < move[0].points.length) {
+            if (play_status == 1 && replay_progress < move[0].points.length) {
                 setTimeout(function () {
                     drawLoop(ctx)
-                }, 5);
+                }, speed);
             }
 
         }
