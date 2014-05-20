@@ -155,10 +155,10 @@
             outline = document.getElementById("outline");
             context = outline.getContext("2d");
 
-            var ball_src = "bball.png";
+            var ball_src = "{% static 'img/bball.png' %}";
             var ball_img = new Image();
 
-            var block_src = "block.png";
+            var block_src = "{% static 'img/block.png' %}";
             var block_img = new Image();
             ball_img.onload = function () {
                 bkgrd.src = src; // load the court after ball loads
