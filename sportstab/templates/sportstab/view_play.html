@@ -159,33 +159,31 @@
             replay_progress = 0;
             start_play();
         });
+        
+        var src = "{% static 'img/uoft_court.jpg' %}";
+        var loaded = false;
+        play = {{ play.jsonstring|safe }};
+        move = play.steps[0].playerMove;
+        outline = document.getElementById("outline");
+        context = outline.getContext("2d");
+
+        var ball_src = "{% static 'img/bball.png' %}";
+        var ball_img = new Image();
+
+        var block_src = "{% static 'img/block.png' %}";
+        var block_img = new Image();
+        ball_img.onload = function () {
+            bkgrd.src = src; // load the court after ball loads
+        };
+        block_img.onload = function () {
+            ball_img.src = ball_src; // load the ball after block loads
+        };
+        block_img.src = block_src;
 
         function start_play() {
-            play = {{ play.jsonstring|safe }};
-            move = play.steps[0].playerMove;
-            outline = document.getElementById("outline");
-            context = outline.getContext("2d");
 
-            var ball_src = "{% static 'img/bball.png' %}";
-            var ball_img = new Image();
-
-            var block_src = "{% static 'img/block.png' %}";
-            var block_img = new Image();
-            ball_img.onload = function () {
-                bkgrd.src = src; // load the court after ball loads
-            };
-            block_img.onload = function () {
-                ball_img.src = ball_src; // load the ball after block loads
-            };
-            block_img.src = block_src;
-
-
-            var src = "{% static 'img/uoft_court.jpg' %}";
-            var loaded = false;
-            bkgrd.onload = function () {
-                //WARNING: not checking if JSON is loaded...
-                mainLoop(context, ball_img, block_img);
-            };
+            //WARNING: not checking if JSON is loaded...
+            mainLoop(context, ball_img, block_img);
             var $play = $('#play');
             $play.removeClass('fa-play');
             $play.addClass('fa-pause');
