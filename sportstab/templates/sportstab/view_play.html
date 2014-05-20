@@ -135,6 +135,7 @@
         };
         /***************************End of classes***************************/
         function createSprites(ctx, block_img) {
+            sprites = [];
             for (i = 0; i < play.players.length; i++) {
                 sprites.push(new Sprite(ctx, block_img));
                 sprites[i].setR(bkgrd.width / 20);
