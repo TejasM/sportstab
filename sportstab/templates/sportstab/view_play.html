@@ -179,17 +179,13 @@
             ball_img.src = ball_src; // load the ball after block loads
         };
         block_img.src = block_src;
-
-        unnormalizePosition();
-        createSprites(context, block_img);
-        createBall(context, ball_img);
-        mainLoop(context, ball_img, block_img);
+        bkgrd.onload = function () {
+            mainLoop(context, ball_img, block_img);
+        };
 
         function start_play() {
+
             //WARNING: not checking if JSON is loaded...
-            unnormalizePosition();
-            createSprites(context, block_img);
-            createBall(context, ball_img);
             mainLoop(context, ball_img, block_img);
             var $play = $('#play');
             $play.removeClass('fa-play');
@@ -228,6 +224,10 @@
         }
 
         function mainLoop(ctx, ball_img, block_img) {
+            unnormalizePosition();
+            createSprites(ctx, block_img);
+            createBall(ctx, ball_img);
+
             setTimeout(function () {
                 drawLoop(ctx)
             }, 50);
