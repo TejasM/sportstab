@@ -181,6 +181,9 @@
         };
         block_img.src = block_src;
         bkgrd.onload = function () {
+            unnormalizePosition();
+            createSprites(context, block_img);
+            createBall(context, ball_img);
             mainLoop(context, ball_img, block_img);
         };
 
@@ -225,10 +228,6 @@
         }
 
         function mainLoop(ctx, ball_img, block_img) {
-            unnormalizePosition();
-            createSprites(ctx, block_img);
-            createBall(ctx, ball_img);
-
             setTimeout(function () {
                 drawLoop(ctx)
             }, 50);
