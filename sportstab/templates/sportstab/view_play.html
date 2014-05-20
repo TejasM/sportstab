@@ -180,6 +180,11 @@
         };
         block_img.src = block_src;
 
+        unnormalizePosition();
+        createSprites(context, block_img);
+        createBall(context, ball_img);
+        mainLoop(context, ball_img, block_img);
+
         function start_play() {
             //WARNING: not checking if JSON is loaded...
             unnormalizePosition();
