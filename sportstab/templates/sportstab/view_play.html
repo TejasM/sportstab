@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block additionalheaders %}
+    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row" style="background: #fff; padding-top: 2%; margin-top: 2%">
+        <div class="large-12 small-12 large-centered columns" style="text-align: center">
+            <div class="row">
+                <div class="large-2 columns">
+                    <a href="/main" class="left radius button">Back</a>
+                </div>
+                <div class="large-10 columns pull-1" style="text-align: center; position: relative">
+                    <h1>{{ play.name }}</h1>
+
+                    <h3>Created by: {{ play.creator.first_name }} {{ play.creator.last_name }}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns">
+                    <canvas id="outline" width="500" height="1000">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+    <script>
+    $(function () {
+        var STILL = 0;
+        var MOVE = 1;
+        var PASS = 2;
+        var DONESCREEN = 3;
+        var SCREEN = 4;
+
+        var bkgrd = new Image();
+        var play = null;
+        var move = null;
+        var sprites = [];
+        var ball = null;
+        var replay_progress = 0;
+        var PASS_SPEED = 8;
+        var curr_has_ball = -1;
+        var passingTo = -1;
+        var curr_event_index = 0;
+
+        /****************************Sprite class **********************/
+        function Sprite(ctx, block_img) {
+            this.context = ctx;
+            this.x = 0;
+            this.y = 0;
+            this.r = 30;
+            this.name = "a";
+            this.color = 'red';
+            this.hasBall = false;
+            this.block = block_img;
+            this.state = 0;
+            this.theta = 0;
+        }
+
+        Sprite.prototype.draw = function () {
+            if (this.state == SCREEN) {
+                this.context.translate(this.x, this.y);
+                this.context.rotate(this.theta);
+                this.context.drawImage(this.block, -this.r * 2, -this.r, this.r * 4, this.r * 2);
+                this.context.rotate(-this.theta);
+                this.context.translate(-this.x, -this.y);
+            } else {
+                this.context.beginPath();
+                this.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                this.context.fillStyle = this.color;
+                this.context.strokeStyle = this.color;
+                this.context.fill();
+                this.context.stroke();
+                this.context.fillStyle = 'black';
+                this.context.font = "20px Arial";
+                this.context.fillText(this.name, this.x - 13, this.y + 8);
+                //WARNING: hardcoded font and positions...
+                if (this.hasBall == true) {
+                    ball.update(this.x, this.y);
+                    ball.draw();
+                }
+            }
+        };
+        Sprite.prototype.update = function (x1, y1) {
+            this.x = x1;
+            this.y = y1;
+        };
+        Sprite.prototype.setR = function (r1) {
+            this.r = r1;
+        };
+        Sprite.prototype.setState = function (s1) {
+            this.state = s1;
+        };
+        Sprite.prototype.setName = function (name1) {
+            this.name = name1;
+        };
+        Sprite.prototype.setColor = function (c1) {
+            this.color = c1;
+        };
+        Sprite.prototype.setHasBall = function (hb) {
+            this.hasBall = hb;
+        };
+        Sprite.prototype.calcScreen = function (up, down) {
+            var dx = up.x - down.x;
+            var dy = up.y - down.y;
+            this.theta = Math.atan(dy / dx);
+        };
+
+        /***************************Ball class***************************/
+        function Ball(ctx, img1) {
+            this.context = ctx;
+            this.x = 0;
+            this.y = 0;
+            this.r = 30;
+            this.img = img1;
+        }
+
+        Ball.prototype.draw = function () {
+            this.context.drawImage(this.img, this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
+        };
+        Ball.prototype.update = function (x1, y1) {
+            this.x = x1;
+            this.y = y1;
+        };
+        Ball.prototype.setR = function (r1) {
+            this.r = r1;
+        };
+        /***************************End of classes***************************/
+        function createSprites(ctx, block_img) {
+            for (i = 0; i < play.players.length; i++) {
+                sprites.push(new Sprite(ctx, block_img));
+                sprites[i].setR(bkgrd.width / 20);
+                sprites[i].setName(play.players[i].name);
+                if (play.players[i].team_color == -16711936)
+                    sprites[i].setColor('green');
+                else
+                    sprites[i].setColor('red');
+            }
+        }
+
+        function createBall(ctx, ball_img) {
+            ball_radius = bkgrd.width / 20 * 0.8;
+            //ball_img.style.width = '10px';//String(ball_radius *2);
+            //ball_img.style.height = '10px';//String(ball_radius *2);
+            ball = new Ball(ctx, ball_img);
+            ball.setR(ball_radius);
+        }
+
+        window.onload = function () {
+            play = "{{ play.json }}";
+            move = play.steps[0].playerMove;
+            outline = document.getElementById("outline");
+            context = outline.getContext("2d");
+
+            var ball_src = "bball.png";
+            var ball_img = new Image();
+
+            var block_src = "block.png";
+            var block_img = new Image();
+            ball_img.onload = function () {
+                bkgrd.src = src; // load the court after ball loads
+            };
+            block_img.onload = function () {
+                ball_img.src = ball_src; // load the ball after block loads
+            };
+            block_img.src = block_src;
+
+
+            var src = "uoft_court.jpg";
+            var loaded = false;
+            bkgrd.onload = function () {
+                //WARNING: not checking if JSON is loaded...
+                mainLoop(context, ball_img, block_img);
+            };
+
+        };
+
+        function unnormalizePosition() {
+            var move = play.steps[0].playerMove;
+            for (var i = 0; i < move.length; i++) {
+                var player = move[i];
+                var pos = player.points;
+                for (var j = 0; j < pos.length; j++) {
+                    pos[j].x = pos[j].x * bkgrd.width;
+                    pos[j].y = pos[j].y * bkgrd.height;
+                }
+
+            }
+
+        }
+
+        function mainLoop(ctx, ball_img, block_img) {
+            unnormalizePosition();
+            createSprites(ctx, block_img);
+            createBall(ctx, ball_img);
+
+            setTimeout(function () {
+                drawLoop(ctx)
+            }, 50);
+        }
+
+        function updateHasBall(hb) {
+            if (hb[replay_progress] != -1) {
+                for (var i = sprites.length - 1; i >= 0; i--) {
+                    if (hb[replay_progress] == i) {
+                        sprites[i].setHasBall(true);
+                        curr_has_ball = i;
+                    }
+                    else sprites[i].setHasBall(false);
+                }
+
+            }
+        }
+
+        function drawLoop(ctx) {
+
+            updateHasBall(play.steps[0].whoHasBall);
+            var use_update_by_pass = false;
+            /*check events*/
+            if ((curr_event_index < play.steps[0].events.length) && (play.steps[0].events[curr_event_index].timepoint == replay_progress)) {
+                if (play.steps[0].events[curr_event_index].event_type == PASS) {
+                    sprites[curr_has_ball].hasBall = false;
+                    curr_has_ball = -1;
+                    passingTo = play.steps[0].events[curr_event_index].passTo;
+                    use_update_by_pass = true;
+                }
+                if (play.steps[0].events[curr_event_index].event_type == SCREEN) {
+                    sprites[play.steps[0].events[curr_event_index].screenPlayerIndex].setState(SCREEN);
+                    sprites[play.steps[0].events[curr_event_index].screenPlayerIndex].calcScreen(play.steps[0].events[curr_event_index].screenUp, play.steps[0].events[curr_event_index].screenDown);
+                }
+                if (play.steps[0].events[curr_event_index].event_type == DONESCREEN) {
+                    sprites[play.steps[0].events[curr_event_index].doneScreenPlayerIndex].setState(0);
+                }
+                curr_event_index++;
+            }
+
+
+            ctx.drawImage(bkgrd, 0, 0);
+            for (var i = sprites.length - 1; i >= 0; i--) {
+                var pt = move[i].points[replay_progress];
+                sprites[i].update(pt.x, pt.y);
+                sprites[i].draw();
+            }
+
+            if ((use_update_by_pass == true) || (curr_has_ball == -1)) {
+                updateBallByPass();
+                ball.draw();
+            }
+            replay_progress++;
+            if (replay_progress < move[0].points.length) {
+                setTimeout(function () {
+                    drawLoop(ctx)
+                }, 5);
+            }
+
+        }
+
+        function updateBallByPass() {
+            var ref_dx = sprites[passingTo].x - ball.x;
+            var ref_dy = sprites[passingTo].y - ball.y;
+            var ref_dr = Math.sqrt(Math.pow(ref_dy, 2) + Math.pow(ref_dx, 2));
+            var dx = PASS_SPEED / ref_dr * ref_dx;
+            var dy = PASS_SPEED / ref_dr * ref_dy;
+            var new_x = ball.x + dx;
+            var new_y = ball.y + dy;
+            if ((new_x - sprites[passingTo].x) * (ball.x - sprites[passingTo].x) < 0) {//pass complete
+                curr_has_ball = passingTo;
+                passingTo = -1;
+            } else {
+                ball.update(new_x, new_y);
+            }
+
+        }
+    });
+    </script>
+{% endblock %}
