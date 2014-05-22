@@ -289,13 +289,10 @@
                 setTimeout(function () {
                     drawLoop(ctx)
                 }, speed);
-            } else if (replay_progress >= move[0].points.length) {
+            } else if (play_status == 1 && replay_progress >= move[0].points.length) {
                 replay_progress = 0;
                 play_status = 0;
-                unnormalizePosition();
-                createSprites(context, block_img);
-                createBall(context, ball_img);
-                mainLoop(context, ball_img, block_img);
+                start_play();
             }
 
         }
