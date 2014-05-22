@@ -28,7 +28,7 @@
                                 You have {{ user.play_set.count }} plays!
                                 {% for p in user.play_set.all %}
                                     <div class="small-1 columns" style="width: 200px; height: 300px;">
-                                        <a href="{% url 'plays:view_team' p.id %}">
+                                        <a href="{% url 'plays:view_play' p.id %}">
                                             <p>{{ p.name }}</p>
 
                                             <p><img src="/media/{{ p.preview.name }}"/></p>
