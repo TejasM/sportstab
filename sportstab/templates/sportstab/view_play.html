@@ -290,7 +290,9 @@
                     drawLoop(ctx)
                 }, speed);
             } else if (replay_progress < move[0].points.length) {
-                play_status = 0;
+                replay_progress = 0;
+                start_play();
+                stop_play();
             }
 
         }
