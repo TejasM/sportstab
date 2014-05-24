@@ -15,8 +15,9 @@ from sportstab.models import Team, Play
 
 
 @login_required
-def view_play(request):
-    return None
+def view_play(request, play_id):
+    play = Play.objects.get(pk=play_id)
+    return render(request, 'sportstab/view_play.html', {'play': play})
 
 
 @login_required
