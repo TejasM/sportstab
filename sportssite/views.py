@@ -39,6 +39,43 @@ def login_user(request):
         return render(request, 'login.html')
 
 
+@csrf_exempt
+def app_login_user(request):
+    debug = 'Debug: '
+    try:
+        username = request.POST['email']
+        debug += (username + ' ')
+        password = request.POST['password']
+        debug += (password + ' ')
+        post_type = request.POST['type']
+        debug += (post_type + ' ')
+        if post_type == 'signup':
+            debug += ('1 ')
+            user = User.objects.create(username=username, email=username, first_name='', last_name='')
+            debug += ('2 ')
+            user.set_password(password)
+            debug += ('3 ')
+            user.save()
+            debug += ('4 ')
+            user = authenticate(username=username, password=password)
+            debug += ('5 ')
+            login(request, user)
+            debug += ('6 ')
+            action.send(request.user, verb='joined Sportstab!')
+            return HttpResponse('Success')
+        else:
+            debug += ('7 ')
+            user = authenticate(username=username, password=password)
+            debug += ('8 ')
+            if user is None:
+                return redirect('/login')
+            debug += ('9 ')
+            login(request, user)
+            return HttpResponse('Success')
+    except:
+        return HttpResponse(debug)
+
+
 @login_required
 def main_page(request):
     my_teams = Team.objects.filter(users__in=[request.user.id])
@@ -80,40 +117,4 @@ def save_video(request):
 def logouthandler(request):
     logout(request)
     return redirect('/')
-
-
-def app_login_user(request):
-    debug = 'Debug: '
-    try:
-        username = request.POST['email']
-        debug += (username + ' ')
-        password = request.POST['password']
-        debug += (password + ' ')
-        post_type = request.POST['type']
-        debug += (post_type + ' ')
-        if post_type == 'signup':
-            debug += ('1 ')
-            user = User.objects.create(username=username, email=username, first_name='', last_name='')
-            debug += ('2 ')
-            user.set_password(password)
-            debug += ('3 ')
-            user.save()
-            debug += ('4 ')
-            user = authenticate(username=username, password=password)
-            debug += ('5 ')
-            login(request, user)
-            debug += ('6 ')
-            action.send(request.user, verb='joined Sportstab!')
-            return HttpResponse('Success')
-        else:
-            debug += ('7 ')
-            user = authenticate(username=username, password=password)
-            debug += ('8 ')
-            if user is None:
-                return redirect('/login')
-            debug += ('9 ')
-            login(request, user)
-            return HttpResponse('Success')
-    except:
-        return HttpResponse(debug)
 
