@@ -83,22 +83,37 @@ def logouthandler(request):
 
 
 def app_login_user(request):
+    debug = 'Debug: '
     username = request.POST['email']
+    debug += (username + ' ')
     password = request.POST['password']
+    debug += (password + ' ')
     post_type = request.POST['type']
-    if post_type == 'signup':
-        user = User.objects.create(username=username, email=username, first_name='', last_name='')
-        user.set_password(password)
-        user.save()
-        user = authenticate(username=username, password=password)
-        login(request, user)
-        action.send(request.user, verb='joined Sportstab!')
-        return HttpResponse('Success')
-    else:
-        user = authenticate(username=username, password=password)
-        if user is None:
-            return redirect('/login')
-        login(request, user)
-        return HttpResponse('Success')
-
+    debug += (post_type + ' ')
+    try:
+        if post_type == 'signup':
+            debug += ('1 ')
+            user = User.objects.create(username=username, email=username, first_name='', last_name='')
+            debug += ('2 ')
+            user.set_password(password)
+            debug += ('3 ')
+            user.save()
+            debug += ('4 ')
+            user = authenticate(username=username, password=password)
+            debug += ('5 ')
+            login(request, user)
+            debug += ('6 ')
+            action.send(request.user, verb='joined Sportstab!')
+            return HttpResponse('Success')
+        else:
+            debug += ('7 ')
+            user = authenticate(username=username, password=password)
+            debug += ('8 ')
+            if user is None:
+                return redirect('/login')
+            debug += ('9 ')
+            login(request, user)
+            return HttpResponse('Success')
+    except:
+        return HttpResponse(debug)
 
