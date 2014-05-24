@@ -68,8 +68,7 @@ def create_team(request):
         return render(request, "sportstab/create_team.html")
 
 
-# TODO -- integrate with login (add a username to the request)
-#@login_required
+@login_required
 @csrf_exempt
 def create_play(request):
     try:
@@ -95,4 +94,15 @@ def create_play(request):
         return HttpResponse('Failed')
 
     return HttpResponse('Success')
+
+@login_required
+@csrf_exempt
+def app_get_play(request):
+    try:
+        name = request.POST['play_name']
+        play = Play.objects.get(name=name)
+        return HttpResponse(play)
+    except:
+        return HttpResponse('Failed')
+
 

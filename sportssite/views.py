@@ -81,3 +81,24 @@ def logouthandler(request):
     logout(request)
     return redirect('/')
 
+
+def app_login_user(request):
+    username = request.POST['email']
+    password = request.POST['password']
+    post_type = request.POST['type']
+    if post_type == 'signup':
+        user = User.objects.create(username=username, email=username, first_name='', last_name='')
+        user.set_password(password)
+        user.save()
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        action.send(request.user, verb='joined Sportstab!')
+        return HttpResponse('Success')
+    else:
+        user = authenticate(username=username, password=password)
+        if user is None:
+            return redirect('/login')
+        login(request, user)
+        return HttpResponse('Success')
+
+

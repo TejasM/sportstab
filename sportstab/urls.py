@@ -6,5 +6,6 @@ urlpatterns = patterns('',
                        url(r'^view_play/(?P<play_id>\d+)$', views.view_play, name='view_play'),
                        url(r'^create_team/$', views.create_team, name='create_team'),
                        url(r'^create_play$', views.create_play),
+                       url(r'^app_get_play$', views.app_get_play),
                        url(r'^view_team/(?P<team_id>\d+)$', views.view_team, name='view_team'),
 )
