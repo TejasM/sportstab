@@ -118,7 +118,7 @@ WSGI_APPLICATION = 'sportssite.wsgi.application'
 import os
 
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\', '/'),)
-
+#
 import dj_database_url
 
 DATABASES['default'] = dj_database_url.config()

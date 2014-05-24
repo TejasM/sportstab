@@ -27,6 +27,18 @@
                     <br>
                     <i class="fa fa-fast-backward" style="color: orangered; margin-top: 20px; font-size: 4em"
                        id="reset"></i>
+
+                    <h3 style="margin-top: 40px">Tags</h3>
+
+                    <div class="row">
+                        <div class="small-12 large-6 large-centered columns">
+                            {% for tag in available_tags %}
+                                <span data-id="{{ tag.id }}"
+                                      class="labels {% if tag.tag_name in play.tags %}selected{% endif %}">{{ tag.tag_name }}
+                                    {% if tag.tag_name in play.tags %}<span class="close">x</span>{% endif %}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,6 +46,38 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+    <script>
+        $(function () {
+            var curr_clicked = null;
+
+            function add_tag() {
+                curr_clicked = $(this);
+                $.post('{% url 'plays:add_tag' play.id %}', {'id': $(this).data('id')}, function (data) {
+                    if (parseInt(data['fail']) == 0) {
+                        curr_clicked.addClass('selected');
+                        curr_clicked.append('<span class="close">x</span>');
+                        $('.labels.selected .close').off('click').on('click', remove_tag);
+                    }
+                });
+            }
+
+            $('.labels:not(.selected)').click(add_tag);
+
+            function remove_tag() {
+                curr_clicked = $(this).parent();
+                event.stopPropagation();
+                $.post('{% url 'plays:remove_tag' play.id %}', {'id': $(this).parent().data('id')}, function (data) {
+                    if (parseInt(data['fail']) == 0) {
+                        curr_clicked.removeClass('selected');
+                        curr_clicked.find('span').remove();
+                        $('.labels:not(.selected)').off('click').on('click', add_tag);
+                    }
+                });
+            }
+
+            $('.labels.selected .close').click(remove_tag);
+        });
+    </script>
     <script>
     $(function () {
         var STILL = 0;

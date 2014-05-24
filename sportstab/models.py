@@ -5,9 +5,12 @@ from django.db import models
 class Play(models.Model):
     creator = models.ForeignKey(User, null=True, blank=True)
     name = models.CharField(max_length=400)
-    tags = models.CharField(max_length=400)
+    tags = models.CharField(max_length=400, default="")
     preview = models.ImageField(upload_to='screenshots/', blank=True)
     jsonstring = models.CharField(max_length=10000000, default="")
+
+    def get_tags(self):
+        return self.tags.split(',')
 
 
 class VideoPlay(models.Model):
@@ -28,3 +31,8 @@ class UserProfile(models.Model):
     fav_position = models.CharField(max_length=100, default='All Positions')
     affiliation = models.CharField(max_length=1000, default="")
     picture = models.ImageField(upload_to='user_pics/', blank=True)
+
+
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=300)
+    available_by_default = models.BooleanField(default=False)
