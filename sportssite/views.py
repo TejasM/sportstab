@@ -84,13 +84,13 @@ def logouthandler(request):
 
 def app_login_user(request):
     debug = 'Debug: '
-    username = request.POST['email']
-    debug += (username + ' ')
-    password = request.POST['password']
-    debug += (password + ' ')
-    post_type = request.POST['type']
-    debug += (post_type + ' ')
     try:
+        username = request.POST['email']
+        debug += (username + ' ')
+        password = request.POST['password']
+        debug += (password + ' ')
+        post_type = request.POST['type']
+        debug += (post_type + ' ')
         if post_type == 'signup':
             debug += ('1 ')
             user = User.objects.create(username=username, email=username, first_name='', last_name='')
