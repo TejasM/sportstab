@@ -16,25 +16,31 @@
                         <div style="text-align: center;">
                             <h4 style="color: #990000; padding-bottom: 20px; ">Plays</h4>
 
-                            <div class="row">
-                                <div class="small-11 columns">
-                                    <input type="text" name="search-terms" placeholder="Filter by team or keywords">
+                            <div class="row" id="plays-list">
+                                <div class="small-12 columns">
+                                    <input type="text" name="search-terms" class="search"
+                                           placeholder="Filter by team or tags">
                                 </div>
-                                <div class="small-1 columns" style="padding: 0;">
-                                    <div class="filter_button">Go</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                You have {{ user.play_set.count }} plays!
-                                {% for p in user.play_set.all %}
-                                    <div class="small-1 columns" style="width: 200px; height: 300px;">
-                                        <a href="{% url 'plays:view_play' p.id %}">
-                                            <p>{{ p.name }}</p>
+                                <div class="small-12 columns">
+                                    You have {{ user.play_set.count }} plays!
+                                    <ul style="list-style: none" class="list">
+                                        {% for p in user.play_set.all %}
+                                            <li>
+                                                <div class="small-1 columns"
+                                                     style="width: 200px; height: 300px;">
+                                                    <a href="{% url 'plays:view_play' p.id %}">
+                                                        <p class="play-name">{{ p.name }}</p>
 
-                                            <p><img src="/media/{{ p.preview.name }}"/></p>
-                                        </a>
-                                    </div>
-                                {% endfor %}
+                                                        <p class="tags" style="display: none">
+                                                            {% for t in p.get_tags %}{{ t }}{% endfor %}</p>
+
+                                                        <p><img src="/media/{{ p.preview.name }}"/></p>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
@@ -126,6 +132,7 @@
     <script src="{% static 'js/foundation/foundation.tab.js' %}"></script>
     <script src="{% static 'js/foundation/foundation.accordion.js' %}"></script>
     <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+    <script src="{% static 'js/list.js' %}"></script>
     <script>
         function chosen_select() {
             setTimeout(function () {
@@ -138,5 +145,10 @@
         function filter() {
             // Go over all images and if tag is not present, make it invisible
         }
+        var options = {
+            valueNames: [ 'play-name', 'tags' ]
+        };
+
+        var list = new List('plays-list', options);
     </script>
 {% endblock %}

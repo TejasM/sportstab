@@ -11,13 +11,17 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from sportstab.models import Team, Play
+from sportstab.models import Team, Play, Tag
 
 
 @login_required
 def view_play(request, play_id):
     play = Play.objects.get(pk=play_id)
-    return render(request, 'sportstab/view_play.html', {'play': play})
+    my_teams = Team.objects.filter(users__in=[request.user.id])
+    available_tags = Tag.objects.filter(available_by_default=True)
+    for t in my_teams:
+        available_tags = available_tags | Tag.objects.filter(tag_name__contains=t.team_name)
+    return render(request, 'sportstab/view_play.html', {'play': play, 'available_tags': available_tags})
 
 
 @login_required
@@ -62,6 +66,8 @@ def create_team(request):
     if request.method == "POST":
         team = Team.objects.create(team_name=request.POST['team-name'])
         team.managers.add(request.user)
+        Tag.objects.create(
+            tag_name=str(request.POST['team-name'] + ' by ' + request.user.first_name + ' ' + request.user.last_name))
         team.save()
         action.send(request.user, verb='created team: ' + team.team_name)
         return redirect(reverse('plays:view_team', args=(team.id,)))
@@ -96,6 +102,7 @@ def create_play(request):
 
     return HttpResponse('Success')
 
+
 @login_required
 @csrf_exempt
 def app_get_play(request):
@@ -107,3 +114,22 @@ def app_get_play(request):
         return HttpResponse('Failed')
 
 
+@csrf_exempt
+def add_tag(request, play_id):
+    play = Play.objects.get(pk=play_id)
+    tag = Tag.objects.get(pk=int(request.POST['id']))
+    if tag.tag_name not in play.tags:
+        play.tags += tag.tag_name + ','
+    play.save()
+    return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')
+
+
+@csrf_exempt
+def remove_tag(request, play_id):
+    play = Play.objects.get(pk=play_id)
+    tag = Tag.objects.get(pk=int(request.POST['id']))
+    if tag.tag_name in play.tags:
+        tags = play.tags.split(tag.tag_name + ',')
+        play.tags = ''.join(tags)
+    play.save()
+    return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')

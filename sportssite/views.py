@@ -6,11 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-from sportstab.models import VideoPlay, Team, UserProfile
+from sportstab.models import VideoPlay, Team, UserProfile, Tag
 
 __author__ = 'tmehta'
 
@@ -79,9 +80,10 @@ def app_login_user(request):
 @login_required
 def main_page(request):
     my_teams = Team.objects.filter(users__in=[request.user.id])
-    all_teams = Team.objects.filter(users__in=[request.user.id])
+    all_teams = Team.objects.all()
     feeds = Action.objects.all().order_by('-timestamp')[:20]
-    return render(request, 'main.html', {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds, 'user':request.user})
+    return render(request, 'main.html',
+                  {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds, 'user': request.user})
 
 
 @login_required
