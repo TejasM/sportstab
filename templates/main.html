@@ -106,7 +106,14 @@
                                     </a>
 
                                     <div id="panel_edit" class="content" style="padding: 0px; ">
-                                        Test
+                                        {% for team in my_teams %}
+                                            <a href="{% url 'plays:view_team' team.id %}"
+                                               style="background:white; padding: 0;">
+                                                <div class="class_team_name">
+                                                    {{ team.team_name }}
+                                                </div>
+                                            </a>
+                                        {% endfor %}
                                     </div>
                                 </dd>
                             </dl>
