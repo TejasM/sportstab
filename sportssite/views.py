@@ -66,7 +66,7 @@ def app_login_user(request):
 
 @login_required
 def main_page(request):
-    my_teams = Team.objects.filter(users__in=[request.user.id])
+    my_teams = Team.objects.filter(Q(users__in=[request.user.id]) | Q(managers__in=[request.user.id]))
     all_teams = Team.objects.all()
     feeds = Action.objects.all().order_by('-timestamp')[:20]
     return render(request, 'main.html',
