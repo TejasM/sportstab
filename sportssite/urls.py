@@ -4,7 +4,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 from django.views.generic import TemplateView
-from sportssite.views import app_login_user, login_user, main_page, logouthandler, profile_page
+from sportssite.views import app_login_user, login_user, main_page, logouthandler, profile_page, app_checkusername
 
 admin.autodiscover()
 
@@ -14,6 +14,7 @@ urlpatterns = patterns('',
                        # url(r'^sportssite/', include('sportssite.foo.urls')),
                        url(r'^login/', login_user),
                        url(r'^app_login$', app_login_user),
+                       url(r'^app_checkusername$', app_checkusername),
                        url(r'^main/', main_page),
                        url(r'^profile/', profile_page),
                        url(r'^plays/', include('sportstab.urls', namespace='plays')),

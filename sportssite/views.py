@@ -39,6 +39,17 @@ def login_user(request):
     else:
         return render(request, 'login.html')
 
+@csrf_exempt
+def app_checkusername(request):
+	if request.method == 'POST':
+		username = request.POST['email'].strip()
+		# Check if username available
+		try:
+			user = User.objects.get(username=username)
+			return HttpResponse("USERNAME_EXISTS")
+		except:
+			pass
+		return HttpResponse("OKAY")
 
 @csrf_exempt
 def app_login_user(request):
