@@ -67,13 +67,16 @@
                                     </a>
 
                                     <div id="panel_join" class="content" style="padding: 0;">
+                                        {% csrf_token %}
                                         <div class="row">
                                             <select id="team-to-join" name="team-to-join" multiple
                                                     data-placeholder="Select a team"
                                                     class="chosen-select">
-                                                <option value="poo">
-                                                    test 123
-                                                </option>
+                                                {% for team in all_teams %}
+                                                    <option value="{{ team }}">
+                                                        {{ team.team_name }} by {{ team.manager }}
+                                                    </option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                         <button class="radius button" id="join-team" style="margin-top: 10px">Join
@@ -103,14 +106,7 @@
                                     </a>
 
                                     <div id="panel_edit" class="content" style="padding: 0px; ">
-                                        {% for team in my_teams %}
-                                            <a href="{% url 'plays:view_team' team.id %}"
-                                               style="background:white; padding: 0;">
-                                                <div class="class_team_name">
-                                                    {{ team.team_name }}
-                                                </div>
-                                            </a>
-                                        {% endfor %}
+                                        Test
                                     </div>
                                 </dd>
                             </dl>
