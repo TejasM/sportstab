@@ -55,7 +55,8 @@ def view_team(request, team_id):
         throughmodel.objects.bulk_create(to_add)
         return HttpResponse(json.dumps({"fail": 0}), content_type='application/json')
     else:
-        possible_users = User.objects.filter(~Q(pk__in=team.users.values_list('id', flat=True))).values_list(
+        possible_users = User.objects.filter(~Q(pk__in=team.users.values_list('id', flat=True)) & ~Q(
+            pk__in=team.users.values_list('id', flat=True))).values_list(
             'id', 'first_name', 'last_name')
         return render(request, "sportstab/view_team.html",
                       {'team': team, 'possible_users': possible_users, 'player': player, 'manager': manager})
