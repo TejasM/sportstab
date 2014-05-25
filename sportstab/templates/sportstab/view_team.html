@@ -64,7 +64,7 @@
     <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
     <script>
         $(function () {
-            {% if team.manager == user %}
+            {% if manager %}
                 $('#add-players').click(function () {
                     var to_add = $('#players-added').val();
                     $.post('{% url 'plays:view_team' team.id %}', {'players-added': to_add, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'players': true}, function (data) {
