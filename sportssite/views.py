@@ -58,7 +58,8 @@ def app_login_user(request):
         password = request.POST['password']
         post_type = request.POST['type']
         if post_type == 'signup':
-            user = User.objects.create(username=username, email=username, first_name='', last_name='')
+            user = User.objects.create(username=username, email=username, first_name=request.POST['first_name'],
+                                       last_name=request.POST['last_name'])
             user.set_password(password)
             user.save()
             user = authenticate(username=username, password=password)
