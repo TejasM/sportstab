@@ -11,17 +11,27 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from sportstab.models import Team, Play, Tag
+from sportstab.models import Team, Play, Tag, UserProfile
 
 
 @login_required
 def view_play(request, play_id):
     play = Play.objects.get(pk=play_id)
-    my_teams = Team.objects.filter(users__in=[request.user.id])
+    my_teams = Team.objects.filter(managers__in=[request.user.id])
     available_tags = Tag.objects.filter(available_by_default=True)
     for t in my_teams:
         available_tags = available_tags | Tag.objects.filter(tag_name__contains=t.team_name)
-    return render(request, 'sportstab/view_play.html', {'play': play, 'available_tags': available_tags})
+    available_tags = [(t.id, t.tag_name) for t in available_tags]
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+    preferred_tags = profile.get_preferred_tags()
+    preferred_tags += play.get_tags()
+    preferred_tags = list(set(preferred_tags))
+    available_tags = [t for t in available_tags if t not in preferred_tags]
+    return render(request, 'sportstab/view_play.html', {'play': play, 'available_tags': available_tags,
+                                                        'preferred_tags': preferred_tags})
 
 
 @login_required
@@ -67,8 +77,9 @@ def create_team(request):
     if request.method == "POST":
         team = Team.objects.create(team_name=request.POST['team-name'])
         team.managers.add(request.user)
-        Tag.objects.create(
-            tag_name=str(request.POST['team-name'] + ' by ' + request.user.first_name + ' ' + request.user.last_name))
+        Tag.objects.create(team=team,
+                           tag_name=str(request.POST[
+                                            'team-name'] + ' by ' + request.user.first_name + ' ' + request.user.last_name))
         team.save()
         action.send(request.user, verb='created team: ' + team.team_name)
         return redirect(reverse('plays:view_team', args=(team.id,)))
@@ -86,11 +97,10 @@ def create_play(request):
 
         # Make the play object
         play_creator = User.objects.get(username=user)
-        newplay = Play(creator=play_creator,
-                       name=name,
-                       jsonstring=jsonstring
+        newplay = Play.objects.create(creator=play_creator,
+                                      name=name,
+                                      jsonstring=jsonstring
         )
-        newplay.save()
 
         # Save the preview image
         filename = user + '.' + name + '.png'
@@ -119,8 +129,10 @@ def app_get_play(request):
 def add_tag(request, play_id):
     play = Play.objects.get(pk=play_id)
     tag = Tag.objects.get(pk=int(request.POST['id']))
-    if tag.tag_name not in play.tags:
-        play.tags += tag.tag_name + ','
+    if tag not in play.tags.all():
+        play.tags.add(tag)
+        if tag.team:
+            tag.team.plays.add(play)
     play.save()
     return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')
 
@@ -129,8 +141,9 @@ def add_tag(request, play_id):
 def remove_tag(request, play_id):
     play = Play.objects.get(pk=play_id)
     tag = Tag.objects.get(pk=int(request.POST['id']))
-    if tag.tag_name in play.tags:
-        tags = play.tags.split(tag.tag_name + ',')
-        play.tags = ''.join(tags)
+    if tag in play.tags.all():
+        play.tags.remove(tag)
+        if tag.team and play in tag.team.plays.all():
+            tag.team.plays.remove(play)
     play.save()
     return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')

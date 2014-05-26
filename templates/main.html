@@ -16,6 +16,21 @@
                         <div style="text-align: center;">
                             <h4 style="color: #990000; padding-bottom: 20px; ">Plays</h4>
 
+                            <div class="row" id="filts">
+                                <p style="text-align: left">Filters</p>
+
+                                <div class="small-2 columns">
+                                    <span
+                                        class="labels selected">All</span>
+                                </div>
+                                {% for pref in user.profile.preferred_tags.all %}
+                                    <div class="small-2 columns">
+                                    <span
+                                        class="labels">{{ pref.tag_name }}</span>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
                             <div class="row" id="plays-list">
                                 <div class="small-12 columns">
                                     <input type="text" name="search-terms" class="search"
@@ -32,7 +47,7 @@
                                                         <p class="play-name">{{ p.name }}</p>
 
                                                         <p class="tags" style="display: none">
-                                                            {% for t in p.get_tags %}{{ t }}{% endfor %}</p>
+                                                            {% for t in p.get_string_tags %}-{{ t }}-{% endfor %}</p>
 
                                                         <p><img src="/media/{{ p.preview.name }}"/></p>
                                                     </a>
@@ -142,6 +157,23 @@
         $(function () {
             //$(".chosen-select").chosen();
         });
+        $('#filts').find('span').click(function () {
+            var label = '-' + $(this).text() + '-';
+            if (label == "-All-") {
+                $('.list').find('li').show();
+            } else {
+                var $list = $('.list').find('li');
+                $list.show();
+                $list.each(function (index) {
+                    if ($(this).find('.tags').text().indexOf(label) == -1 && $(this).find('.play-name').text().indexOf(label) == -1) {
+                        $(this).hide();
+                    }
+                });
+            }
+            $('#filts').find('span').removeClass('selected');
+            $(this).addClass('selected');
+        });
+
         function filter() {
             // Go over all images and if tag is not present, make it invisible
         }
