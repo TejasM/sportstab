@@ -1,4 +1,5 @@
 import json
+import logging
 
 from actstream import action
 from actstream.models import Action
@@ -18,6 +19,8 @@ from sportstab.models import VideoPlay, Team, UserProfile
 
 __author__ = 'tmehta'
 
+logger = logging.getLogger(__name__)
+
 
 def login_user(request):
     if request.method == "POST":
@@ -34,6 +37,7 @@ def login_user(request):
             action.send(request.user, verb='joined Sportstab!')
             base = firebase.FirebaseApplication('https://esc472sportstab.firebaseio.com/', None)
             result = base.post('/users', {'email': username, 'password': password})
+            logger.debug(result)
             return redirect('/main')
         else:
             user = authenticate(username=username, password=password)
