@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-from firebase import firebase
+import requests
 
 from sportstab.models import VideoPlay, Team, UserProfile
 
@@ -35,9 +35,9 @@ def login_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             action.send(request.user, verb='joined Sportstab!')
-            base = firebase.FirebaseApplication('https://esc472sportstab.firebaseio.com/', None)
-            result = base.post('/users', {'email': username, 'password': password})
-            logger.debug(result)
+            r = requests.post('https://auth.firebase.com/auth/firebase/create',
+                              {'firebase': '', 'email': username, 'password': password, 'transport': 'json'})
+            logger.debug(r)
             return redirect('/main')
         else:
             user = authenticate(username=username, password=password)
