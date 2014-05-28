@@ -1,17 +1,20 @@
 import json
+
 from actstream import action
 from actstream.models import Action
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
-from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-from sportstab.models import VideoPlay, Team, UserProfile, Tag
+from firebase import firebase
+
+from sportstab.models import VideoPlay, Team, UserProfile
+
 
 __author__ = 'tmehta'
 
@@ -29,6 +32,8 @@ def login_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             action.send(request.user, verb='joined Sportstab!')
+            base = firebase.FirebaseApplication('https://esc472sportstab.firebaseio.com/', None)
+            result = base.post('/users', {'email': username, 'password': password})
             return redirect('/main')
         else:
             user = authenticate(username=username, password=password)
@@ -39,17 +44,19 @@ def login_user(request):
     else:
         return render(request, 'login.html')
 
+
 @csrf_exempt
 def app_checkusername(request):
-	if request.method == 'POST':
-		username = request.POST['email'].strip()
-		# Check if username available
-		try:
-			user = User.objects.get(username=username)
-			return HttpResponse("USERNAME_EXISTS")
-		except:
-			pass
-		return HttpResponse("OKAY")
+    if request.method == 'POST':
+        username = request.POST['email'].strip()
+        # Check if username available
+        try:
+            user = User.objects.get(username=username)
+            return HttpResponse("USERNAME_EXISTS")
+        except:
+            pass
+        return HttpResponse("OKAY")
+
 
 @csrf_exempt
 def app_login_user(request):

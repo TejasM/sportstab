@@ -9,3 +9,4 @@ South==0.8.4
 PIL==1.1.7
 django-activity-stream==0.4.5beta1
 django-jsonfield==0.9.10
+python-firebase==1.2
