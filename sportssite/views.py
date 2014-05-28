@@ -35,8 +35,9 @@ def login_user(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             action.send(request.user, verb='joined Sportstab!')
-            r = requests.post('https://auth.firebase.com/auth/firebase/create',
-                              {'firebase': '', 'email': username, 'password': password, 'transport': 'json'})
+            r = requests.get('https://auth.firebase.com/auth/firebase/create',
+                             params={'firebase': 'esc472sportstab', 'email': username, 'password': password,
+                                     'transport': 'json'})
             logger.debug(r)
             return redirect('/main')
         else:
