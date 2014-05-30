@@ -125,6 +125,17 @@ def app_get_play(request):
         return HttpResponse('Failed')
 
 
+@login_required
+@csrf_exempt
+def app_get_tags(request):
+    try:
+        name = request.POST['play_name']
+        play = Play.objects.get(name=name)
+        return HttpResponse(json.dumps({'tags': play.get_string_tags()}), content_type='application/json')
+    except:
+        return HttpResponse('Failed')
+
+
 @csrf_exempt
 def add_tag(request, play_id):
     play = Play.objects.get(pk=play_id)
