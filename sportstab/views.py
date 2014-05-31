@@ -131,7 +131,7 @@ def app_get_tags(request):
     try:
         name = request.POST['play_name']
         play = Play.objects.get(name=name)
-        return HttpResponse(json.dumps({'tags': play.get_string_tags()}), content_type='application/json')
+        return HttpResponse(json.dumps({'tags': ['test1', 'test3']}), content_type='application/json')
     except:
         return HttpResponse('Failed')
 
