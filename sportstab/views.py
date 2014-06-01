@@ -2,6 +2,7 @@
 import json
 
 from actstream import action
+import cStringIO
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -226,7 +227,7 @@ def add_snapshot(request, play_id):
         play = Play.objects.get(pk=play_id)
         number = play.snapshot_set.count()
         name = 'snapshot_' + str(number)
-        image = ContentFile(request.POST['image'], name=name)
+        image = ContentFile(cStringIO.StringIO(request.POST['image'].decode('base64')), name=name)
         snapshot = Snapshot.objects.create(image=image, play=play)
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')

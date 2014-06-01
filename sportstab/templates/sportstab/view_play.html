@@ -409,15 +409,20 @@
             if (play_status == 1) {
                 var canvas = document.getElementById("outline");
                 var img = canvas.toDataURL("image/png");
+                var image = new Image();
+                image.onload = function () {
+                    snap_context.drawImage(image, snap_number * 200, 0, 200, 361);
+                    snap_number++;
+                };
+                image.src = img;
                 $.post('{% url 'plays:add_snapshot' play.id %}', {'image': img}, function (data) {
                     var image = new Image();
                     image.onload = function () {
                         snap_context.drawImage(image, snap_number * 200, 0, 200, 361);
                         snap_number++;
                     };
-                    image.src = data['path'];
+                    image.src = '/media/' + data['path'];
                 });
-
             }
         });
     });
