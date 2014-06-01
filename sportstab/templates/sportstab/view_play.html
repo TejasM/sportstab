@@ -413,7 +413,7 @@
                 image.style.width = '50%';
                 image.style.height = 'auto';
                 image.onload = function () {
-                    snap_context.drawImage(image, 0, 0, 200 + snap_number * 200, 361);
+                    snap_context.drawImage(image, snap_number * 200, 0, 200, 361);
                     snap_number++;
                 };
                 image.src = img;
