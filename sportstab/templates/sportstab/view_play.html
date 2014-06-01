@@ -402,14 +402,14 @@
 
         }
 
-        var context = document.getElementById('snap-canvas').getContext('2d');
+        var snap_context = document.getElementById('snap-canvas').getContext('2d');
         $('#snapshot').click(function () {
             if (play_status == 1) {
                 var canvas = document.getElementById("outline");
                 var img = canvas.toDataURL("image/png");
                 var image = new Image();
                 image.onload = function () {
-                    context.drawImage(image, 100, 100);
+                    snap_context.drawImage(image, 100, 100);
                 };
                 image.src = img;
             }
