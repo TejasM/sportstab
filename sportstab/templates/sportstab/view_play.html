@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="row">
-                <canvas id="snap-canvas" width="700" height="500">
+                <canvas id="snap-canvas" width="1000" height="200">
 
                 </canvas>
             </div>
@@ -411,7 +411,7 @@
                 image.style.width = '50%';
                 image.style.height = 'auto';
                 image.onload = function () {
-                    snap_context.drawImage(image, 0, 0);
+                    snap_context.drawImage(image, 0, 0, 100, 200);
                 };
                 image.src = img;
             }
