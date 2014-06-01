@@ -27,6 +27,8 @@
                     <br>
                     <i class="fa fa-fast-backward" style="color: orangered; margin-top: 20px; font-size: 4em"
                        id="reset"></i>
+                    <i class="fa fa-camera" style="color: orangered; margin-top: 20px; font-size: 4em"
+                       id="snapshot"></i>
 
                     <h3 style="margin-top: 40px">Tags</h3>
 
@@ -55,6 +57,11 @@
                         </div>
                     {% endif %}
                 </div>
+            </div>
+            <div class="row">
+                <canvas id="snap-canvas">
+
+                </canvas>
             </div>
         </div>
     </div>
@@ -394,6 +401,19 @@
             }
 
         }
+
+        $('#snapshot').click(function () {
+            if (play_status == 1) {
+                var canvas = document.getElementById("outline");
+                var img = canvas.toDataURL("image/png");
+                var context = document.getElementById('snap-canvas');
+                var image = new Image();
+                image.onload = function () {
+                    context.drawImage(img, 100, 100);
+                };
+                image.src = img;
+            }
+        })
     });
     </script>
 {% endblock %}
