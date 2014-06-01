@@ -169,7 +169,7 @@
                 $('#filts').find('.all').removeClass('selected');
                 $(this).toggleClass('selected');
                 if ($(this).hasClass('selected')) {
-                    selected_filters.append(label);
+                    selected_filters.push(label);
                 } else {
                     $.each(selected_filters, function (i) {
                         if (selected_filters[i] === label) {
@@ -182,7 +182,7 @@
                 $list.each(function (index) {
                     var some = false;
                     for (var i = 0; i < selected_filters.length; i++) {
-                        if ($(this).find('.tags').text().indexOf(label) == -1 && $(this).find('.play-name').text().indexOf(label) == -1) {
+                        if ($(this).find('.tags').text().indexOf(selected_filters[i]) == -1 && $(this).find('.play-name').text().indexOf(selected_filters[i]) == -1) {
                             some = true;
                             break;
                         }
