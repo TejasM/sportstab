@@ -129,12 +129,49 @@ def app_get_play(request):
 @csrf_exempt
 def app_get_tags(request):
     try:
-        name = request.POST['play_name']
-        play = Play.objects.get(name=name)
-        return HttpResponse(json.dumps({'tags': ['test1', 'test3']}), content_type='application/json')
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+    try:
+        # This returns the tags as a list of (id, name)
+        preferred_tags = profile.get_preferred_tags()
+        # Make unique
+        preferred_tags = list(set(preferred_tags))
+        # Convert this to two lists, one for ids one for names
+        id_name_lists = map(list, zip(*preferred_tags))
+        id_list = id_name_lists[0]
+        name_list = id_name_lists[1]
+        return HttpResponse(json.dumps({'ids' : id_list, 'tags': name_list}), content_type='application/json')
     except:
         return HttpResponse('Failed')
 
+@login_required
+@csrf_exempt
+def app_set_tags(request):
+    try:
+        # Get the play name and json object
+        name = request.POST['play_name']
+        play = Play.objects.get(name=name)
+        json_str = request.POST['input_obj']
+        tags_obj = json.load(json_str)
+    except:
+        return HttpResponse('Failed')
+
+    try:
+        # Get the list of tag IDs
+        id_list = tags_obj['IDs']
+        # For each ID, get the tag and add it to play
+        # COPIED FROM add_tag. Can re-factor into def.
+        for id in id_list:
+            tag = Tag.objects.get(pk=int(id))
+            if tag not in play.tags.all():
+                play.tags.add(tag)
+                if tag.team:
+                    tag.team.plays.add(play)
+        play.save()
+        return HttpResponse('Success')
+    except:
+        return HttpResponse('Failed')
 
 @csrf_exempt
 def add_tag(request, play_id):
