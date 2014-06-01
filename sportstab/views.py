@@ -1,5 +1,6 @@
 # Create your views here.
 import json
+import re
 
 from actstream import action
 import cStringIO
@@ -227,7 +228,8 @@ def add_snapshot(request, play_id):
         play = Play.objects.get(pk=play_id)
         number = play.snapshot_set.count()
         name = 'snapshot_' + str(number)
-        image = ContentFile(cStringIO.StringIO(request.POST['image'].decode('base64')), name=name)
+        imgstr = re.search(r'base64,(.*)', request.POST['image']).group(1)
+        image = ContentFile(imgstr, name=name)
         snapshot = Snapshot.objects.create(image=image, play=play)
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')
