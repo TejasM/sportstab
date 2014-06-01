@@ -169,7 +169,7 @@
                 $('#filts').find('.all').removeClass('selected');
                 $(this).toggleClass('selected');
                 if ($(this).hasClass('selected')) {
-                    selected_filters.append(label);
+                    selected_filters.push(label);
                 } else {
                     $.each(selected_filters, function (i) {
                         if (selected_filters[i] === label) {
