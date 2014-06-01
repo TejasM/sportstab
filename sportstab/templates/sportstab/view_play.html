@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="row">
-                <canvas id="snap-canvas" width="700" height="100">
+                <canvas id="snap-canvas" width="700" height="500">
 
                 </canvas>
             </div>
@@ -408,6 +408,8 @@
                 var canvas = document.getElementById("outline");
                 var img = canvas.toDataURL("image/png");
                 var image = new Image();
+                image.style.width = '50%';
+                image.style.height = 'auto';
                 image.onload = function () {
                     snap_context.drawImage(image, 0, 0);
                 };
