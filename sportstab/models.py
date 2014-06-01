@@ -51,6 +51,16 @@ class UserProfile(models.Model):
         return [(t.id, t.tag_name) for t in self.preferred_tags.all()]
 
 
+def get_snap_name(instance):
+    return 'snapshots/' + instance.play.name
+
+
+class Snapshot(models.Model):
+    image = models.ImageField(upload_to=get_snap_name)
+    annotation = models.CharField(max_length=10000, default="")
+    play = models.ForeignKey(Play)
+
+
 @receiver(post_save, sender=UserProfile)
 def my_callback(sender, instance, *args, **kwargs):
     default_tags = ["Offense", "Defense", "Against Zone Defense", "Against Man Defense"]

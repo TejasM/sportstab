@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from sportstab.models import Team, Play, Tag, UserProfile
+from sportstab.models import Team, Play, Tag, UserProfile, Snapshot
 
 
 @login_required
@@ -79,7 +79,7 @@ def create_team(request):
         team.managers.add(request.user)
         tag = Tag.objects.create(team=team,
                                  tag_name=str(request.POST[
-                                 'team-name'] + ' by ' + request.user.first_name + ' ' + request.user.last_name))
+                                                  'team-name'] + ' by ' + request.user.first_name + ' ' + request.user.last_name))
         request.user.profile.preferred_tags.add(tag)
         team.save()
         action.send(request.user, verb='created team: ' + team.team_name)
@@ -218,3 +218,16 @@ def remove_tag(request, play_id):
             tag.team.plays.remove(play)
     play.save()
     return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')
+
+
+@csrf_exempt
+def add_snapshot(request, play_id):
+    if request.method == "POST":
+        play = Play.objects.get(pk=play_id)
+        number = play.snapshot_set.count()
+        name = 'snapshot_' + str(number)
+        image = ContentFile(request.POST['image'], name=name)
+        snapshot = Snapshot.objects.create(image=image, play=play)
+        return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
+                            content_type='application/json')
+    return HttpResponse({}, content_type='application/json')
