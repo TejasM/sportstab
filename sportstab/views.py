@@ -106,6 +106,20 @@ def create_play(request):
         filename = user + '.' + name + '.png'
         newplay.preview.save(filename, ContentFile(request.FILES['preview'].read()))
 
+        # Add tags
+
+        # Read the json object for the play, which contains tags
+        play_obj = json.loads(jsonstring)
+        # Get the list of tag IDs
+        id_list = play_obj['tags']['IDs']
+        # For each ID, get the tag and add it to newplay
+        for id in id_list:
+            tag = Tag.objects.get(pk=int(id))
+            newplay.tags.add(tag)
+            if tag.team:
+                tag.team.plays.add(newplay)
+        newplay.save()
+
         # Save this action
         action.send(play_creator, verb='created a new play: ' + name)
     except:
@@ -153,7 +167,7 @@ def app_set_tags(request):
         name = request.POST['play_name']
         play = Play.objects.get(name=name)
         json_str = request.POST['input_obj']
-        tags_obj = json.load(json_str)
+        tags_obj = json.loads(json_str)
     except:
         return HttpResponse('Failed')
 
