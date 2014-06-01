@@ -21,7 +21,7 @@
 
                                 <div class="small-2 columns">
                                     <span
-                                        class="labels selected">All</span>
+                                        class="labels selected all">All</span>
                                 </div>
                                 {% for pref in user.profile.preferred_tags.all %}
                                     <div class="small-2 columns">
@@ -163,8 +163,10 @@
             if (label == "-All-") {
                 $('.list').find('li').show();
                 $('#filts').find('span').removeClass('selected');
+                $(this).addClass('selected');
             } else {
                 var $list = $('.list').find('li');
+                $('#filts').find('.all').removeClass('selected');
                 $(this).toggleClass('selected');
                 if ($(this).hasClass('selected')) {
                     selected_filters.append(label);
