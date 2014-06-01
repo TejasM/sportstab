@@ -112,12 +112,16 @@ def create_play(request):
         play_obj = json.loads(jsonstring)
         # Get the list of tag IDs
         id_list = play_obj['tags']['IDs']
+        state_list = play_obj['tags']['states']
         # For each ID, get the tag and add it to newplay
+        i=0
         for id in id_list:
             tag = Tag.objects.get(pk=int(id))
-            newplay.tags.add(tag)
-            if tag.team:
-                tag.team.plays.add(newplay)
+            if state_list[i]:
+                newplay.tags.add(tag)
+                if tag.team:
+                    tag.team.plays.add(newplay)
+            i+=1
         newplay.save()
 
         # Save this action
@@ -155,13 +159,15 @@ def app_get_tags(request):
         id_name_lists = map(list, zip(*preferred_tags))
         id_list = id_name_lists[0]
         name_list = id_name_lists[1]
-        return HttpResponse(json.dumps({'ids' : id_list, 'tags': name_list}), content_type='application/json')
+        return HttpResponse(json.dumps({'IDs' : id_list, 'tags': name_list}), content_type='application/json')
     except:
         return HttpResponse('Failed')
 
 @login_required
 @csrf_exempt
 def app_set_tags(request):
+    # This function is incomplete/wrong
+    # See create_play and copy that
     try:
         # Get the play name and json object
         name = request.POST['play_name']
