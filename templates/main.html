@@ -157,21 +157,41 @@
         $(function () {
             //$(".chosen-select").chosen();
         });
+        var selected_filters = [];
         $('#filts').find('span').click(function () {
             var label = '-' + $(this).text() + '-';
             if (label == "-All-") {
                 $('.list').find('li').show();
+                $('#filts').find('span').removeClass('selected');
             } else {
                 var $list = $('.list').find('li');
+                $(this).toggleClass('selected');
+                if ($(this).hasClass('selected')) {
+                    selected_filters.append(label);
+                } else {
+                    $.each(selected_filters, function (i) {
+                        if (selected_filters[i] === label) {
+                            selected_filters.splice(i, 1);
+                            return false;
+                        }
+                    });
+                }
                 $list.show();
                 $list.each(function (index) {
-                    if ($(this).find('.tags').text().indexOf(label) == -1 && $(this).find('.play-name').text().indexOf(label) == -1) {
+                    var some = false;
+                    for (var i = 0; i < selected_filters.length; i++) {
+                        if ($(this).find('.tags').text().indexOf(label) == -1 && $(this).find('.play-name').text().indexOf(label) == -1) {
+                            some = true;
+                            break;
+                        }
+                    }
+                    if (!some) {
                         $(this).hide();
                     }
                 });
             }
-            $('#filts').find('span').removeClass('selected');
-            $(this).addClass('selected');
+
+
         });
 
         function filter() {
