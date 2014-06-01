@@ -51,8 +51,8 @@ class UserProfile(models.Model):
         return [(t.id, t.tag_name) for t in self.preferred_tags.all()]
 
 
-def get_snap_name(instance):
-    return 'snapshots/' + instance.play.name
+def get_snap_name(instance, filename):
+    return 'snapshots/' + instance.play.name + '/' + filename
 
 
 class Snapshot(models.Model):
