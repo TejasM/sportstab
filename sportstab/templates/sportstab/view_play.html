@@ -467,9 +467,12 @@
             var id = $(this).data('id');
             curr_snap = $(this).parent().index();
             $.post('{% url 'plays:remove_snapshot' %}', {'snap-id': id}, function () {
-                $($above[i]).remove();
-                $($canvases[i]).remove();
-                $($below[i]).remove();
+                $above = $('#above-canvas');
+                $canvases = $('#canvases');
+                $below = $('#below-canvas');
+                $($above[curr_snap]).remove();
+                $($canvases[curr_snap]).remove();
+                $($below[curr_snap]).remove();
             });
         }
 
@@ -489,6 +492,9 @@
             }
         }
 
+        $above = $('#above-canvas');
+        $canvases = $('#canvases');
+        $below = $('#below-canvas');
         $above.find('button').click(remove_snap);
         $below.find('button').click(update_snap);
     });
