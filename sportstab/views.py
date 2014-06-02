@@ -227,10 +227,12 @@ def add_snapshot(request, play_id):
     if request.method == "POST":
         play = Play.objects.get(pk=play_id)
         number = play.snapshot_set.count()
-        name = 'snapshot_' + str(number) + '.png'
-        imgstr = re.search(r'base64,(.*)', request.POST['image']).group(1)
-        image = ContentFile(imgstr, name=name)
-        snapshot = Snapshot.objects.create(image=image, play=play)
+        name = 'snapshot_' + str(number) + '.jpg'
+        file_content = ContentFile(str(request.POST['image']).split(',')[1].decode('base64'), name=name)
+        thumb_io = cStringIO.StringIO()
+        file_content.save(thumb_io, format='JPEG')
+        file_content = ContentFile(thumb_io.getvalue())
+        snapshot = Snapshot.objects.create(image=file_content, play=play)
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')
     return HttpResponse({}, content_type='application/json')
