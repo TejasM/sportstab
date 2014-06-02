@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.utils.image import Image
 from django.views.decorators.csrf import csrf_exempt
 
 from sportstab.models import Team, Play, Tag, UserProfile, Snapshot
@@ -229,6 +230,7 @@ def add_snapshot(request, play_id):
         number = play.snapshot_set.count()
         name = 'snapshot_' + str(number) + '.jpg'
         file_content = ContentFile(str(request.POST['image']).split(',')[1].decode('base64'), name=name)
+        file_content = Image.open(file_content)
         thumb_io = cStringIO.StringIO()
         file_content.save(thumb_io, format='JPEG')
         file_content = ContentFile(thumb_io.getvalue())
