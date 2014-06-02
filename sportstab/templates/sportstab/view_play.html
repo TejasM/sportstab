@@ -411,7 +411,7 @@
         var $below = $('#below-canvas');
         $('#snapshot').click(function () {
             if (play_status == 1) {
-                var $ele = $('<div class="large-2 small-12"></div>');
+                var $ele = $('<div class="large-2 small-12 columns"></div>');
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
                 $canvases.append($ele);
@@ -429,10 +429,10 @@
                         snap_context.drawImage(image, 0, 0, snap_width, snap_height);
                     }, false);
                     image.src = '/media/' + data['path'];
-                    var $ele = $('<div class="large-2 small-12"></div>');
+                    var $ele = $('<div class="large-2 small-12 columns"></div>');
                     $ele.append('<button data-id="' + data['id'] + '">Remove Snapshot</button>');
                     $above.append($ele);
-                    $ele = $('<div class="large-2 small-12"></div>');
+                    $ele = $('<div class="large-2 small-12 columns"></div>');
                     $ele.append('<textarea id="snap-' + data['id'] + '" disabled=disabled></textarea>');
                     $ele.append('<button data-id="' + data['id'] + '">Edit</button>');
                     $below.append($ele);
@@ -445,16 +445,16 @@
         {% for snap in play.snapshot_set.all %}
             var image_{{ snap.id }} = new Image();
             image_{{ snap.id }}.addEventListener('load', function () {
-                var $ele = $('<div class="large-2 small-12"></div>');
+                var $ele = $('<div class="large-2 small-12 columns"></div>');
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
                 $canvases.append($ele);
                 var snap_context = $canvas[0].getContext('2d');
                 snap_context.drawImage(image_{{ snap.id }}, 0, 0, snap_width, snap_height);
-                $ele = $('<div class="large-2 small-12"></div>');
+                $ele = $('<div class="large-2 small-12 columns"></div>');
                 $ele.append('<button data-id="{{ snap.id }}">Remove Snapshot</button>');
                 $above.append($ele);
-                $ele = $('<div class="large-2 small-12"></div>');
+                $ele = $('<div class="large-2 small-12 columns"></div>');
                 $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>No Annotation</textarea>');
                 $ele.append('<button data-id="{{ snap.id }}">Edit</button>');
                 $below.append($ele);
