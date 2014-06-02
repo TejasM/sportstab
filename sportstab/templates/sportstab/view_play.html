@@ -458,6 +458,7 @@
                 $ele = $('<div class="large-2 small-12"></div>');
                 $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>No Annotation</textarea>');
                 $ele.append('<button data-id="{{ snap.id }}">Edit</button>');
+                $below.append($ele);
             }(snap_number);
             snap_number++;
             image_{{ snap.id }}.src = '/media/' + '{{ snap.image.name }}';
