@@ -415,7 +415,7 @@
                 var $ele = $('<div class="large-2 small-12"></div>');
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
-                $canvases.append($canvas);
+                $canvases.append($ele);
                 var snap_context = $canvas[0].getContext('2d');
                 var canvas = document.getElementById("outline");
                 var img = canvas.toDataURL("image/png");
@@ -437,6 +437,9 @@
                     $ele = $('<div class="large-2 small-12"></div>');
                     $ele.append('<textarea id="snap-' + data['id'] + '" disabled=disabled></textarea>');
                     $ele.append('<button data-id="' + data['id'] + '">Edit</button>');
+                    $below.append($ele);
+                    $above.find('button').click(remove_snap);
+                    $below.find('button').click(update_snap);
                 });
             }
         });
@@ -446,7 +449,7 @@
                 var $ele = $('<div class="large-2 small-12"></div>');
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
-                $canvases.append($canvas);
+                $canvases.append($ele);
                 var snap_context = $canvas[0].getContext('2d');
                 snap_context.drawImage(image_{{ snap.id }}, add_at * 200, 0, snap_width, snap_height);
                 $ele = $('<div class="large-2 small-12"></div>');
