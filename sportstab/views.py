@@ -1,4 +1,5 @@
 # Create your views here.
+from PIL import Image
 import json
 import re
 
@@ -11,7 +12,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.utils.image import Image
 from django.views.decorators.csrf import csrf_exempt
 
 from sportstab.models import Team, Play, Tag, UserProfile, Snapshot
