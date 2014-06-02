@@ -239,7 +239,7 @@ def add_snapshot(request, play_id):
 @csrf_exempt
 def remove_snapshot(request):
     if request.method == "POST":
-        snapshot = Snapshot.objects.get(pk=request.POST['snap-id'])
+        snapshot = Snapshot.objects.get(pk=int(request.POST['snap-id']))
         snapshot.delete()
     return HttpResponse({}, content_type='application/json')
 
@@ -247,7 +247,7 @@ def remove_snapshot(request):
 @csrf_exempt
 def update_snapshot(request):
     if request.method == "POST":
-        snapshot = Snapshot.objects.get(pk=request.POST['snap-id'])
+        snapshot = Snapshot.objects.get(pk=int(request.POST['snap-id']))
         snapshot.annotation = request.POST['annotation']
         snapshot.save()
     return HttpResponse({}, content_type='application/json')
