@@ -416,7 +416,7 @@
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
                 $canvases.append($canvas);
-                var snap_context = $canvas.getContext('2d');
+                var snap_context = $canvas[0].getContext('2d');
                 var canvas = document.getElementById("outline");
                 var img = canvas.toDataURL("image/png");
                 var image = new Image();
@@ -447,7 +447,7 @@
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
                 $ele.append($canvas);
                 $canvases.append($canvas);
-                var snap_context = $canvas.getContext('2d');
+                var snap_context = $canvas[0].getContext('2d');
                 snap_context.drawImage(image_{{ snap.id }}, add_at * 200, 0, snap_width, snap_height);
                 $ele = $('<div class="large-2 small-12"></div>');
                 $ele.append('<button data-id="{{ snap.id }}">Remove Snapshot</button>');
