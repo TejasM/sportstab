@@ -441,24 +441,24 @@
                 });
             }
         });
-        function addimage() {
-            var $ele = $('<div class="large-2 small-12"></div>');
-            var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
-            $ele.append($canvas);
-            $canvases.append($ele);
-            var snap_context = $canvas[0].getContext('2d');
-            snap_context.drawImage(image_{{ snap.id }}, 0, 0, snap_width, snap_height);
-            $ele = $('<div class="large-2 small-12"></div>');
-            $ele.append('<button data-id="{{ snap.id }}">Remove Snapshot</button>');
-            $above.append($ele);
-            $ele = $('<div class="large-2 small-12"></div>');
-            $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>No Annotation</textarea>');
-            $ele.append('<button data-id="{{ snap.id }}">Edit</button>');
-            $below.append($ele);
-        }
+
         {% for snap in play.snapshot_set.all %}
             var image_{{ snap.id }} = new Image();
-            image_{{ snap.id }}.addEventListener('load', addimage(), false);
+            image_{{ snap.id }}.addEventListener('load', function () {
+                var $ele = $('<div class="large-2 small-12"></div>');
+                var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
+                $ele.append($canvas);
+                $canvases.append($ele);
+                var snap_context = $canvas[0].getContext('2d');
+                snap_context.drawImage(image_{{ snap.id }}, 0, 0, snap_width, snap_height);
+                $ele = $('<div class="large-2 small-12"></div>');
+                $ele.append('<button data-id="{{ snap.id }}">Remove Snapshot</button>');
+                $above.append($ele);
+                $ele = $('<div class="large-2 small-12"></div>');
+                $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>No Annotation</textarea>');
+                $ele.append('<button data-id="{{ snap.id }}">Edit</button>');
+                $below.append($ele);
+            }, false);
             image_{{ snap.id }}.src = '/media/' + '{{ snap.image.name }}';
         {% endfor %}
         var curr_snap = null;
