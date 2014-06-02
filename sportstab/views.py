@@ -234,7 +234,7 @@ def add_snapshot(request, play_id):
         snapshot = Snapshot.objects.create(image=file_content, play=play)
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')
-    return HttpResponse({}, content_type='application/json')
+    return HttpResponse(json.dumps({}), content_type='application/json')
 
 
 @csrf_exempt
@@ -242,7 +242,7 @@ def remove_snapshot(request):
     if request.method == "POST":
         snapshot = Snapshot.objects.get(pk=int(request.POST['snap-id']))
         snapshot.delete()
-    return HttpResponse({}, content_type='application/json')
+    return HttpResponse(json.dumps({}), content_type='application/json')
 
 
 @csrf_exempt
@@ -251,4 +251,4 @@ def update_snapshot(request):
         snapshot = Snapshot.objects.get(pk=int(request.POST['snap-id']))
         snapshot.annotation = request.POST['annotation']
         snapshot.save()
-    return HttpResponse({}, content_type='application/json')
+    return HttpResponse(json.dumps({}), content_type='application/json')
