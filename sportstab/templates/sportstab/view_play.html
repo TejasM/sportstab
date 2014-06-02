@@ -492,11 +492,8 @@
             }
         }
 
-        $above = $('#above-canvas');
-        $canvases = $('#canvases');
-        $below = $('#below-canvas');
-        $above.find('button').click(remove_snap);
-        $below.find('button').click(update_snap);
+        $above.on('click', 'button', remove_snap);
+        $below.on('click', 'button', update_snap);
     });
     </script>
 {% endblock %}
