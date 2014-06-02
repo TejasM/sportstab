@@ -11,6 +11,8 @@ urlpatterns = patterns('',
                        url(r'^app_set_tags/$', views.app_set_tags),
                        url(r'^add_tag/(?P<play_id>\d+)$', views.add_tag, name='add_tag'),
                        url(r'^add_snapshot/(?P<play_id>\d+)$', views.add_snapshot, name='add_snapshot'),
+                       url(r'^remove_snapshot/$', views.remove_snapshot, name='remove_snapshot'),
+                       url(r'^update_snapshot/$', views.update_snapshot, name='update_snapshot'),
                        url(r'^remove_tag/(?P<play_id>\d+)$', views.remove_tag, name='remove_tag'),
                        url(r'^view_team/(?P<team_id>\d+)$', views.view_team, name='view_team'),
 )
