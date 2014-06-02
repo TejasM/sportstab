@@ -455,7 +455,7 @@
                 $ele.append('<button data-id="{{ snap.id }}">Remove Snapshot</button>');
                 $above.append($ele);
                 $ele = $('<div class="large-2 small-12 columns"></div>');
-                $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>No Annotation</textarea>');
+                $ele.append('<textarea id="snap-{{ snap.id }}" disabled=disabled>{{ snap.annotation }}</textarea>');
                 $ele.append('<button data-id="{{ snap.id }}">Edit</button>');
                 $below.append($ele);
             }, false);
