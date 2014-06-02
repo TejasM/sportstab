@@ -231,9 +231,6 @@ def add_snapshot(request, play_id):
         name = 'snapshot_' + str(number) + '.jpg'
         file_content = ContentFile(str(request.POST['image']).split(',')[1].decode('base64'), name=name)
         file_content = Image.open(file_content)
-        thumb_io = cStringIO.StringIO()
-        file_content.save(thumb_io, format='JPEG')
-        file_content = ContentFile(thumb_io.getvalue())
         snapshot = Snapshot.objects.create(image=file_content, play=play)
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')
