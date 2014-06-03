@@ -436,8 +436,6 @@
                     $ele.append('<textarea id="snap-' + data['id'] + '" disabled=disabled></textarea>');
                     $ele.append('<button data-id="' + data['id'] + '">Edit</button>');
                     $below.append($ele);
-                    $above.find('button').click(remove_snap);
-                    $below.find('button').click(update_snap);
                 });
             }
         });
