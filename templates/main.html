@@ -37,7 +37,7 @@
                                            placeholder="Filter by team or tags">
                                 </div>
                                 <div class="small-12 columns">
-                                    You have {{ user.play_set.count }} plays!
+                                    You have {{ plays.count }} plays!
                                     <ul style="list-style: none" class="list">
                                         {% if plays %}
                                             {% for p in plays %}

@@ -99,6 +99,11 @@ def main_page(request):
     plays = None
     if tags:
         plays = Play.objects.filter(tags__in=list(tags))
+
+    if plays:
+        plays = plays | Play.objects.filter(creator=request.user)
+    else:
+        plays = Play.objects.filter(creator=request.user)
     all_teams = Team.objects.all()
     feeds = Action.objects.all().order_by('-timestamp')[:20]
     return render(request, 'main.html',
