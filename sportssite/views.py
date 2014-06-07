@@ -98,7 +98,7 @@ def main_page(request):
             tags = Tag.objects.filter(tag_name__contains=t.team_name) | tags
     plays = None
     if tags:
-        plays = Play.objects.filter(tag__in=list(tags))
+        plays = Play.objects.filter(tags__in=list(tags))
     all_teams = Team.objects.all()
     feeds = Action.objects.all().order_by('-timestamp')[:20]
     return render(request, 'main.html',
