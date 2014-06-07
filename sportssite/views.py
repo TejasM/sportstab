@@ -14,7 +14,7 @@ from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
 import requests
 
-from sportstab.models import VideoPlay, Team, UserProfile
+from sportstab.models import VideoPlay, Team, UserProfile, Play, Tag
 
 
 __author__ = 'tmehta'
@@ -91,10 +91,19 @@ def app_login_user(request):
 @login_required
 def main_page(request):
     my_teams = Team.objects.filter(Q(users__in=[request.user.id]) | Q(managers__in=[request.user.id]))
+    tags = None
+    if my_teams:
+        tags = Tag.objects.filter(tag_name__contains=my_teams[0].team_name)
+        for t in my_teams:
+            tags = Tag.objects.filter(tag_name__contains=t.team_name) | tags
+    plays = None
+    if tags:
+        plays = Play.objects.filter(tag__in=list(tags))
     all_teams = Team.objects.all()
     feeds = Action.objects.all().order_by('-timestamp')[:20]
     return render(request, 'main.html',
-                  {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds, 'user': request.user})
+                  {'my_teams': my_teams, 'all_teams': all_teams, 'feeds': feeds, 'user': request.user,
+                   'plays': plays})
 
 
 @login_required
