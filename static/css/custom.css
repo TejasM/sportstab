@@ -161,3 +161,7 @@ div.filter_button:hover {
 .labels .close {
     float: right;
 }
+
+.light-box {
+    display: none;
+}
