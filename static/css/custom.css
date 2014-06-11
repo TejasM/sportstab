@@ -165,6 +165,7 @@ div.filter_button:hover {
 .light-box {
     display: none;
     background: #fff;
+    padding: 10px;
 }
 
 #canvas {
