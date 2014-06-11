@@ -80,13 +80,11 @@
                     if (parseInt(data['fail']) == 0) {
                         curr_clicked.addClass('selected');
                         curr_clicked.append('<span class="close">x</span>');
-                        $('.labels:not(.selected)').off('click').on('click', add_tag);
-                        $('.labels.selected .close').off('click').on('click', remove_tag);
                     }
                 });
             }
 
-            $('.labels:not(.selected)').click(add_tag);
+            $('#current-tags').delegate('.labels:not(.selected)', 'click', add_tag);
 
             function remove_tag() {
                 curr_clicked = $(this).parent();
@@ -95,13 +93,11 @@
                     if (parseInt(data['fail']) == 0) {
                         curr_clicked.removeClass('selected');
                         curr_clicked.find('span').remove();
-                        $('.labels:not(.selected)').off('click').on('click', add_tag);
-                        $('.labels.selected .close').off('click').on('click', remove_tag);
                     }
                 });
             }
 
-            $('.labels.selected .close').click(remove_tag);
+            $('#current-tags').delegate('.labels:not(.selected)', 'click', remove_tag);
 
             $(".chosen-select").chosen();
 
@@ -111,12 +107,10 @@
                     $.post('{% url 'plays:add_tag' play.id %}', {'id': $(this).val()}, function (data) {
                         if (parseInt(data['fail']) == 0) {
                             $('#current-tags').append('<span data-id="' + curr_clicked.val() + '"' +
-                                'class="labels selected">' + curr_clicked.text() + '<span class="close">x</span></span>');
+                                    'class="labels selected">' + curr_clicked.text() + '<span class="close">x</span></span>');
                             $(curr_clicked.find('option')[curr_clicked.prop('selectedIndex')]).remove();
                             curr_clicked.prop('selectedIndex', 0);
                             $('.chosen-select').trigger("chosen:updated");
-                            $('.labels:not(.selected)').off('click').on('click', add_tag);
-                            $('.labels.selected .close').off('click').on('click', remove_tag);
                         }
                     });
                 }
