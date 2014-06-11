@@ -97,7 +97,7 @@
                 });
             }
 
-            $('#current-tags').delegate('.labels:not(.selected)', 'click', remove_tag);
+            $('#current-tags').delegate('.labels.selected .close', 'click', remove_tag);
 
             $(".chosen-select").chosen();
 
