@@ -164,4 +164,36 @@ div.filter_button:hover {
 
 .light-box {
     display: none;
+    background: #fff;
 }
+
+#canvas {
+    border: 1px solid black;
+    background-color: white;
+    float: left;
+}
+
+div.setting {
+    width: 150px;
+    float: left;
+}
+
+div.status {
+    clear: left;
+}
+
+button {
+    width: 130px;
+    font-family: arial;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 1px 1px 0px #ffffff;
+}
+
+p {
+    font-size: 30px;
+    font-family: serif;
+}
+
