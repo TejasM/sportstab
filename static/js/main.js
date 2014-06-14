@@ -343,13 +343,14 @@ var previousSelectedFillButtonIndex = 0;
 var previousSelectedOutlineButtonIndex = 0;
 var previousSelectedHeadButtonIndex = 0;
 var previousSelectedTypeButtonIndex = 0;
+var currContext;
 
 function bring_up_canvas() {
     //TODO: add canvas scaled
     full_canvas = document.getElementById("full-canvas");
     full_context = full_canvas.getContext("2d");
 
-    var currContext = $(this)[0].getContext('2d');
+    currContext = $(this)[0].getContext('2d');
     currContext.webkitImageSmoothingEnabled = false;
     currContext.mozImageSmoothingEnabled = false;
     currContext.imageSmoothingEnabled = false; /// future
@@ -447,7 +448,7 @@ function clearCanvas() {
 
 function drawShapes() {
     // Clear the canvas.
-    full_context.clearRect(0, 0, full_canvas.width, full_canvas.height);
+    full_context.drawImage(currContext.canvas, 0, 0, 495, 894);
 
     // Go through all the shapes.
     for (var i = shapes.length - 1; i >= 0; i--) {
