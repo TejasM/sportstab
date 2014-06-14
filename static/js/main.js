@@ -448,7 +448,7 @@ function clearCanvas() {
 
 function drawShapes() {
     // Clear the canvas.
-    full_context.drawImage(currContext.canvas, 0, 0, 495, 894);
+    full_context.drawImage(currContext.canvas, 125, 50, 495, 894);
 
     // Go through all the shapes.
     for (var i = shapes.length - 1; i >= 0; i--) {
