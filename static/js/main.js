@@ -103,7 +103,7 @@ function Line(canvas) {
     this.y = new Array();
     this.dotted = false;
     this.head = "line"; // could be one of: 'nothing', 'arrow', 'line'
-    this.context = canvas.getContext("2d");
+    this.context = full_canvas.getContext("2d");
     this.type_of_shape = "line";
 }
 
@@ -167,7 +167,7 @@ Line.prototype.draw = function () {
 };
 
 function ColorButton(canvas, x, y, length, color) {
-    this.context = canvas.getContext("2d");
+    this.context = full_canvas.getContext("2d");
     this.start_x = x;
     this.start_y = y;
     this.side_length = length;
@@ -209,7 +209,7 @@ ColorButton.prototype.testHit = function (testX, testY) {
 };
 
 function Head(canvas, x, y, w, h, elem) {
-    this.context = canvas.getContext("2d");
+    this.context = full_canvas.getContext("2d");
     this.start_x = x;
     this.start_y = y;
     this.width = w;
@@ -320,8 +320,8 @@ Type.prototype.testHit = function (testX, testY) {
 var shapes = [];
 var shapes_copy = [];
 
-var canvas;
-var context;
+var full_canvas;
+var full_context;
 var fill;
 var fill_context;
 var outline;
@@ -343,9 +343,24 @@ var previousSelectedFillButtonIndex = 0;
 var previousSelectedOutlineButtonIndex = 0;
 var previousSelectedHeadButtonIndex = 0;
 var previousSelectedTypeButtonIndex = 0;
-window.onload = function () {
-    canvas = document.getElementById("canvas");
-    context = canvas.getContext("2d");
+
+function bring_up_canvas() {
+    //TODO: add canvas scaled
+    full_canvas = document.getElementById("full-canvas");
+    full_context = full_canvas.getContext("2d");
+
+    var currContext = $(this)[0].getContext('2d');
+    currContext.webkitImageSmoothingEnabled = false;
+    currContext.mozImageSmoothingEnabled = false;
+    currContext.imageSmoothingEnabled = false; /// future
+
+
+    full_context.webkitImageSmoothingEnabled = false;
+    full_context.mozImageSmoothingEnabled = false;
+    full_context.imageSmoothingEnabled = false; /// future
+
+    full_context.drawImage(currContext.canvas, 0, 0, 495, 894);
+
     /*fill = document.getElementById("fill");
      fill_context = fill.getContext("2d");*/
     outline = document.getElementById("other-outline");
@@ -355,11 +370,11 @@ window.onload = function () {
     type = document.getElementById("type");
     type_context = type.getContext("2d");
 
-    canvas.onmousedown = canvasMouseDown;
-    canvas.onmouseup = canvasMouseUp;
-    canvas.onmouseout = canvasMouseUp;
-    canvas.onmousemove = canvasMouseMove;
-    canvas.onclick = canvasMouseClick;
+    full_canvas.onmousedown = canvasMouseDown;
+    full_canvas.onmouseup = canvasMouseUp;
+    full_canvas.onmouseout = canvasMouseUp;
+    full_canvas.onmousemove = canvasMouseMove;
+    full_canvas.onclick = canvasMouseClick;
 
     /*  fill.onclick = fillMouseClick;
      createColors(fill_buttons, fill, "fill");*/
@@ -376,7 +391,10 @@ window.onload = function () {
     var line_width_p = document.getElementById("current_line_width");
     line_width_p.innerHTML = curr_line_width;
     setState("line");
-};
+    $('#current-snap-light').lightbox_me({centered: true});
+
+}
+
 function createColors(buttons, panel, called_from) {
     colors = ["green", "blue", "red", "yellow", "magenta", "orange", "brown", "purple", "pink", "black"];
     var length = panel.height / 2;
@@ -429,7 +447,7 @@ function clearCanvas() {
 
 function drawShapes() {
     // Clear the canvas.
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    full_context.clearRect(0, 0, full_canvas.width, full_canvas.height);
 
     // Go through all the shapes.
     for (var i = shapes.length - 1; i >= 0; i--) {
@@ -467,12 +485,12 @@ var click_event = false; // javascript's mouseclick event can happen even if use
 // in our case, we'll not treat those as mouse click.  We'll detect actually click by a down and up without move
 function canvasMouseDown(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - canvas.offsetLeft;
-    var clickY = e.pageY - canvas.offsetTop;
+    var clickX = e.pageX - full_canvas.offsetLeft;
+    var clickY = e.pageY - full_canvas.offsetTop;
     click_event = true;
     if (state == "line") {
         // Create the new Line.
-        line = new Line(canvas);
+        line = new Line(full_canvas);
         line.appendPos(clickX, clickY);
         line.setLineWidth(curr_line_width);
         line.setDotted(curr_type);
@@ -485,7 +503,7 @@ function canvasMouseDown(e) {
     }
     if (state == "DottedLine") {
         // Create the new Line.
-        line = new Line(canvas);
+        line = new Line(full_canvas);
         line.appendPos(clickX, clickY);
         line.setLineWidth(curr_line_width);
         line.setDotted(true);
@@ -508,8 +526,8 @@ function canvasMouseDown(e) {
 
 function canvasMouseMove(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - canvas.offsetLeft;
-    var clickY = e.pageY - canvas.offsetTop;
+    var clickX = e.pageX - full_canvas.offsetLeft;
+    var clickY = e.pageY - full_canvas.offsetTop;
     click_event = false;
     if ((state == "line") || (state == "DottedLine")) {
         if (line != null) {
@@ -529,8 +547,8 @@ function canvasMouseMove(e) {
 
 function canvasMouseUp(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - canvas.offsetLeft;
-    var clickY = e.pageY - canvas.offsetTop;
+    var clickX = e.pageX - full_canvas.offsetLeft;
+    var clickY = e.pageY - full_canvas.offsetTop;
 
     if ((state == "line") || (state == "DottedLine")) {
         line.appendPos(clickX, clickY);

@@ -68,7 +68,6 @@
         </div>
     </div>
     <div class="light-box" id="current-snap-light">
-        <h1> Canvas Draw </h1>
         <canvas id="full-canvas" width="495" height="894" style="margin-right: 20px">
         </canvas>
         <div class="setting">
@@ -513,18 +512,10 @@
             }
         }
 
-        function bring_up_canvas() {
-            //TODO: add canvas scaled
-            $('#current-snap-light').lightbox_me({centered: true});
-            var context = $('#full-canvas')[0].getContext('2d');
-            var currContext = $(this)[0].getContext('2d');
-            context.drawImage($(this)[0], 0, 0, 495, 894);
-        }
-
         $above.on('click', 'button', remove_snap);
         $below.on('click', 'button', update_snap);
         $canvases.on('click', 'canvas', bring_up_canvas);
     });
     </script>
-    {% comment %}<script src="{% static 'js/main.js' %}"></script>{% endcomment %}
+    <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
