@@ -551,13 +551,15 @@ function canvasMouseUp(e) {
     var clickY = e.pageY - full_canvas.offsetTop;
 
     if ((state == "line") || (state == "DottedLine")) {
-        line.appendPos(clickX, clickY);
-        shapes.unshift(line);
-        //whenver there's new action, make a copy of shapes, this is to update shapes_copy in order to 'redo'
-        shapes_copy = shapes.slice(0);
-        drawShapes();
-        line = null;
-        resetState();
+        if (line != null) {
+            line.appendPos(clickX, clickY);
+            shapes.unshift(line);
+            //whenver there's new action, make a copy of shapes, this is to update shapes_copy in order to 'redo'
+            shapes_copy = shapes.slice(0);
+            drawShapes();
+            line = null;
+            resetState();
+        }
         return;
     }
     shapes[0].isSelected = false;
