@@ -103,7 +103,7 @@ function Line(canvas) {
     this.y = new Array();
     this.dotted = false;
     this.head = "line"; // could be one of: 'nothing', 'arrow', 'line'
-    this.context = full_canvas.getContext("2d");
+    this.context = canvas.getContext("2d");
     this.type_of_shape = "line";
 }
 
@@ -167,7 +167,7 @@ Line.prototype.draw = function () {
 };
 
 function ColorButton(canvas, x, y, length, color) {
-    this.context = full_canvas.getContext("2d");
+    this.context = canvas.getContext("2d");
     this.start_x = x;
     this.start_y = y;
     this.side_length = length;
@@ -209,7 +209,7 @@ ColorButton.prototype.testHit = function (testX, testY) {
 };
 
 function Head(canvas, x, y, w, h, elem) {
-    this.context = full_canvas.getContext("2d");
+    this.context = canvas.getContext("2d");
     this.start_x = x;
     this.start_y = y;
     this.width = w;
@@ -448,7 +448,7 @@ function clearCanvas() {
 
 function drawShapes() {
     // Clear the canvas.
-    full_context.drawImage(currContext.canvas, 125, 50, 495, 894);
+    full_context.drawImage(currContext.canvas, 0, 0, 495, 894);
 
     // Go through all the shapes.
     for (var i = shapes.length - 1; i >= 0; i--) {
