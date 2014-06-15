@@ -83,6 +83,7 @@
             <button onclick="undo()">Undo</button>
             <button onclick="redo()">Redo</button>
             <button onclick="changeLineWidth()">Change Line Width</button>
+            <button id="update-snap">Save</button>
         </div>
         <div class="status">
             <span> Currently selected action: </span>
@@ -431,10 +432,12 @@
         var $above = $('#above-canvas');
         var $canvases = $('#canvases');
         var $below = $('#below-canvas');
+        var curr_canvas;
         $('#snapshot').click(function () {
             if (play_status == 1) {
                 var $ele = $('<div class="large-2 small-12 columns"></div>');
                 var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
+                curr_canvas = $canvas;
                 $ele.append($canvas);
                 $canvases.append($ele);
                 var snap_context = $canvas[0].getContext('2d');
@@ -450,6 +453,7 @@
                     image.addEventListener('load', function () {
                         snap_context.drawImage(image, 0, 0, snap_width, snap_height);
                     }, false);
+                    curr_canvas.data('id', data['id']);
                     image.src = '/media/' + data['path'];
                     var $ele = $('<div class="large-2 small-12 columns"></div>');
                     $ele.append('<button data-id="' + data['id'] + '">Remove Snapshot</button>');
@@ -512,10 +516,22 @@
             }
         }
 
+
+        $('#update-snap').click(function () {
+            var id = $(this).data('id');
+            var to_update_canvas = $('canvas[data-id=' + id.toString() + ']');
+            var snap_context = $('#full-canvas')[0].getContext('2d');
+            to_update_canvas[0].getContext('2d').drawImage(snap_context.canvas, 0, 0, snap_width, snap_height);
+            $.post('{% url 'plays:add_snapshot' play.id %}', {'image': img, 'replace-id': id.toString()}, function (data) {
+            });
+            $('#current-snap-light').trigger('close');
+        });
+
         $above.on('click', 'button', remove_snap);
         $below.on('click', 'button', update_snap);
         $canvases.on('click', 'canvas', bring_up_canvas);
-    });
+    })
+    ;
     </script>
     <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

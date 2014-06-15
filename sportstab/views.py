@@ -231,7 +231,13 @@ def add_snapshot(request, play_id):
         name = 'snapshot_' + str(number) + '.jpg'
         imgstr = re.search(r'base64,(.*)', request.POST['image']).group(1)
         file_content = ContentFile(imgstr.decode('base64'), name=name)
-        snapshot = Snapshot.objects.create(image=file_content, play=play)
+        replace_id = request.POST.get('replace-id', '')
+        if replace_id == '':
+            snapshot = Snapshot.objects.create(image=file_content, play=play)
+        else:
+            snapshot = Snapshot.objects.get(pk=int(replace_id))
+            snapshot.image = file_content
+            snapshot.save()
         return HttpResponse(json.dumps({'id': snapshot.id, 'path': snapshot.image.name}),
                             content_type='application/json')
     return HttpResponse(json.dumps({}), content_type='application/json')

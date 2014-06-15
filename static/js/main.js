@@ -373,6 +373,8 @@ function bring_up_canvas() {
     full_canvas = document.getElementById("full-canvas");
     full_context = full_canvas.getContext("2d");
 
+    $('#update-snap').data('id', $(this).data('id'));
+
     currContext = $(this)[0].getContext('2d');
     currContext.webkitImageSmoothingEnabled = false;
     currContext.mozImageSmoothingEnabled = false;
