@@ -522,7 +522,7 @@
             var to_update_canvas = $('canvas[data-id=' + id.toString() + ']');
             var snap_context = $('#full-canvas')[0].getContext('2d');
             to_update_canvas[0].getContext('2d').drawImage(snap_context.canvas, 0, 0, snap_width, snap_height);
-            $.post('{% url 'plays:add_snapshot' play.id %}', {'image': img, 'replace-id': id.toString()}, function (data) {
+            $.post('{% url 'plays:add_snapshot' play.id %}', {'image': to_update_canvas[0].toDataURL("image/png"), 'replace-id': id.toString()}, function (data) {
             });
             $('#current-snap-light').trigger('close');
         });
