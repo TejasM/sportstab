@@ -1,6 +1,26 @@
 /**
  * Created by tmehta on 11/06/14.
  */
+
+function relMouseCoords(event) {
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = this;
+
+    do {
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while (currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x: canvasX, y: canvasY}
+}
+HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
 //Full Canvas
 var state;
 var last_action;
@@ -486,8 +506,8 @@ var click_event = false; // javascript's mouseclick event can happen even if use
 // in our case, we'll not treat those as mouse click.  We'll detect actually click by a down and up without move
 function canvasMouseDown(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - full_canvas.offsetLeft;
-    var clickY = e.pageY - full_canvas.offsetTop;
+    var clickX = full_canvas.relMouseCoords(e).x;
+    var clickY = full_canvas.relMouseCoords(e).y;
     click_event = true;
     if (state == "line") {
         // Create the new Line.
@@ -527,8 +547,8 @@ function canvasMouseDown(e) {
 
 function canvasMouseMove(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - full_canvas.offsetLeft;
-    var clickY = e.pageY - full_canvas.offsetTop;
+    var clickX = full_canvas.relMouseCoords(e).x;
+    var clickY = full_canvas.relMouseCoords(e).y;
     click_event = false;
     if ((state == "line") || (state == "DottedLine")) {
         if (line != null) {
@@ -548,8 +568,8 @@ function canvasMouseMove(e) {
 
 function canvasMouseUp(e) {
     // Get the canvas click coordinates.
-    var clickX = e.pageX - full_canvas.offsetLeft;
-    var clickY = e.pageY - full_canvas.offsetTop;
+    var clickX = full_canvas.relMouseCoords(e).x;
+    var clickY = full_canvas.relMouseCoords(e).y;
 
     if ((state == "line") || (state == "DottedLine")) {
         if (line != null) {
@@ -595,8 +615,8 @@ function typeMouseClick(e) {
 }
 
 function onColorClick(e, panel, buttons, called_from) {
-    var clickX = panel.offsetLeft - panel.style.borderWidth;
-    var clickY = panel.offsetTop - panel.style.borderWidth;
+    var clickX = panel.relMouseCoords(e).x;
+    var clickY = panel.relMouseCoords(e).y;
 
     var i = selectedButtonIndex(buttons, clickX, clickY);
     if (i != -1) {
