@@ -470,7 +470,7 @@
             var image_{{ snap.id }} = new Image();
             image_{{ snap.id }}.addEventListener('load', function () {
                 var $ele = $('<div class="large-2 small-12 columns"></div>');
-                var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '"></canvas>');
+                var $canvas = $('<canvas width="' + snap_width.toString() + '" height="' + snap_height.toString() + '" data-id="{{ snap.id }}"></canvas>');
                 $ele.append($canvas);
                 $canvases.append($ele);
                 var snap_context = $canvas[0].getContext('2d');
