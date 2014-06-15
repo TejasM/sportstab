@@ -595,8 +595,8 @@ function typeMouseClick(e) {
 }
 
 function onColorClick(e, panel, buttons, called_from) {
-    var clickX = e.pageX - panel.offsetLeft - panel.style.borderWidth;
-    var clickY = e.pageY - panel.offsetTop - panel.style.borderWidth;
+    var clickX = panel.offsetLeft - panel.style.borderWidth;
+    var clickY = panel.offsetTop - panel.style.borderWidth;
 
     var i = selectedButtonIndex(buttons, clickX, clickY);
     if (i != -1) {
