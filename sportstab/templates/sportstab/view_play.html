@@ -68,7 +68,7 @@
         </div>
     </div>
     <div class="light-box" id="current-snap-light">
-        <canvas id="full-canvas" width="495" height="894" style="margin-right: 20px">
+        <canvas id="full-canvas" width="495" height="894" style="margin-right: 20px; float: right;">
         </canvas>
         <div class="setting">
             Outline Colour
@@ -516,6 +516,21 @@
             }
         }
 
+        function update_snap2() {
+            var $text = $(this);
+            if ($text.is('[disabled=disabled]')) {
+                $text.prop('disabled', false);
+                $(this).text('Save');
+            } else {
+                var text = $text.val();
+                curr_snap = $(this).parent().index();
+                $.post('{% url 'plays:update_snapshot' %}', {'snap-id': parseInt($(this).attr('id').split('-')[1]), 'annotation': text}, function () {
+                    $text.prop('disabled', true);
+                    $(this).text('Edit');
+                });
+            }
+        }
+
 
         $('#update-snap').click(function () {
             var id = $(this).data('id');
@@ -528,6 +543,7 @@
         });
 
         $above.on('click', 'button', remove_snap);
+        $below.on('click', 'textarea', update_snap2);
         $below.on('click', 'button', update_snap);
         $canvases.on('click', 'canvas', bring_up_canvas);
     })

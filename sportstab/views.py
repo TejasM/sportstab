@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+import requests
 
 from sportstab.models import Team, Play, Tag, UserProfile, Snapshot
 
@@ -156,11 +157,13 @@ def app_get_tags(request):
         profile = UserProfile.objects.create(user=request.user)
     try:
         # This returns the tags as a list of (id, name)
-        preferred_tags = profile.get_preferred_tags()
-        # Make unique
-        preferred_tags = list(set(preferred_tags))
+        my_teams = Team.objects.filter(managers__in=[request.user.id])
+        available_tags = Tag.objects.filter(available_by_default=True)
+        for t in my_teams:
+            available_tags = available_tags | Tag.objects.filter(tag_name__contains=t.team_name)
+        available_tags = [(t.id, t.tag_name) for t in available_tags]
         # Convert this to two lists, one for ids one for names
-        id_name_lists = map(list, zip(*preferred_tags))
+        id_name_lists = map(list, zip(*available_tags))
         id_list = id_name_lists[0]
         name_list = id_name_lists[1]
         return HttpResponse(json.dumps({'IDs': id_list, 'tags': name_list}), content_type='application/json')
@@ -207,6 +210,21 @@ def add_tag(request, play_id):
         play.tags.add(tag)
         if tag.team:
             tag.team.plays.add(play)
+            for p in tag.team.users.all():
+                url = 'https://esc472sportstab.firebaseio.com/users/' + p.username.replace('@', '').replace('.',
+                                                                                                            '') + '/plays/'
+                r = requests.get(url)
+                r = json.loads(r.text)
+                if play.name not in r:
+                    requests.post(url, {play.name: play.name})
+                pass
+            for p in tag.team.managers.all():
+                url = 'https://esc472sportstab.firebaseio.com/users/' + p.username.replace('@', '').replace('.',
+                                                                                                            '') + '/plays/'
+                r = requests.get(url)
+                r = json.loads(r.text)
+                if play.name not in r:
+                    requests.post(url, {play.name: play.name})
     play.save()
     return HttpResponse(json.dumps({'fail': 0}), content_type='application/json')
 
